@@ -33,6 +33,8 @@ namespace car_dealership.Models
         public int numberOfDoors { get; set; }
 
         public string? driveType { get; set; }
+
+        public string? image { get; set; }
     }
 }
 

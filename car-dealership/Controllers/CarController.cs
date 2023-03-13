@@ -31,26 +31,25 @@ namespace car_dealership.Controllers
 
 
         [HttpGet]
-        [Route("api/[controller]/keyword/{keyword}")]
+        [Route("api/[controller]/search/{keyword}")]
         public IActionResult SearchCars(string keyword)
         {
             CarDealershipContext? context = HttpContext.RequestServices.GetService(typeof(car_dealership.Models.CarDealershipContext)) as CarDealershipContext;
-
             var query = context?.GetAllCars().AsQueryable();
-
             if (!string.IsNullOrEmpty(keyword))
             {
-                var searchTerms = keyword.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-                query = query.Where(c => c.make.ToUpper().Contains(keyword.ToUpper()) || c.year.ToString().StartsWith(keyword) ||
-                c.model.ToUpper().Contains(keyword.ToUpper()) || c.color.ToUpper().Contains(keyword.ToUpper()));
-
+                query = query.Where(c =>
+                    c.make.ToUpper().Contains(keyword.ToUpper()) ||
+                    c.year.ToString().StartsWith(keyword) ||
+                    c.model.ToUpper().Contains(keyword.ToUpper()) ||
+                    c.color.ToUpper().Contains(keyword.ToUpper())
+                );
             }
             var cars = query.ToList();
 
             if (cars.Count == 0)
             {
-                return NotFound();
+                return NotFound(keyword);
             }
 
             var result = new
@@ -61,8 +60,7 @@ namespace car_dealership.Controllers
                     make = c.make,
                     model = c.model,
                     year = c.year,
-                    color = c.color,
-                    colorCode = c.colorCode
+                    color = c.color
                 })
             };
 

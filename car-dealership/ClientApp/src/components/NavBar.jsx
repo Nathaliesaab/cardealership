@@ -5,37 +5,35 @@ import AppRoutes from "../AppRoutes";
 import { HamburgerIcon } from "../common/icons/HamburgerIcons";
 import { CloseIcon } from "../common/icons/CloseIcons";
 
-export const Navbar = ({ numberOfItems }) => {
+export const Navbar = () => {
   const [displayMenu, setDisplayMenu] = useState(false);
   return (
-    <>
-      <nav>
-        <div className="nav__container">
-          <Link to="/">
-            <img src={Logo} alt="Logo" className="logo" />
-          </Link>
+    <nav>
+      <div className="nav__container">
+        <Link to="/">
+          <img src={Logo} alt="Logo" className="logo" />
+        </Link>
 
-          <ul className="nav__links">
-            {AppRoutes.map(
-              (item, index) =>
-                item.display && (
-                  <li className="nav__list" key={index}>
-                    <Link to={`${item.path}`} className="nav__link">
-                      {item.linkValue}
-                    </Link>
-                  </li>
-                )
-            )}
-            <button className="nav__login--button btn__general">Login</button>
-          </ul>
-          <button
-            className="btn__menu"
-            onClick={() => setDisplayMenu(!displayMenu)}
-          >
-            <HamburgerIcon />
-          </button>
-        </div>
-      </nav>
+        <ul className="nav__links">
+          {AppRoutes.map(
+            (item, index) =>
+              item.display && (
+                <li className="nav__list" key={index}>
+                  <Link to={`${item.path}`} className="nav__link">
+                    {item.linkValue}
+                  </Link>
+                </li>
+              )
+          )}
+          <button className="nav__login--button btn__general">Login</button>
+        </ul>
+        <button
+          className="btn__menu"
+          onClick={() => setDisplayMenu(!displayMenu)}
+        >
+          <HamburgerIcon />
+        </button>
+      </div>
       <div
         className={`menu__backdrop ${displayMenu && "menu__backdrop--open"}`}
       >
@@ -51,7 +49,7 @@ export const Navbar = ({ numberOfItems }) => {
               item.display && (
                 <li className="menu__list" key={index}>
                   <Link
-                    to="/"
+                    to={`${item.path}`}
                     className="menu__link"
                     onClick={() => setDisplayMenu(!displayMenu)}
                   >
@@ -63,6 +61,6 @@ export const Navbar = ({ numberOfItems }) => {
           <button className="nav__login--button btn__general">Login</button>
         </ul>
       </div>
-    </>
+    </nav>
   );
 };

@@ -130,19 +130,19 @@ Navbar
 }
 
 .menu__backdrop {
-    justify-content: center;
     align-items: center;
-    transform: translate(100%);
-    opacity: 0;
-    visibility: hidden;
+    display: flex;
     height: 100vh;
-    margin: auto;
-    transition: 0.3s all ease;
-    position: absolute;
-    top: 0;
-    right: 0;
+    justify-content: center;
     left: 0;
-    bottom: 0;
+    opacity: 0;
+    position: fixed;
+    top: 0;
+    transition: all 0.3s ease;
+    visibility: hidden;
+    z-index: 100;
+    transform: translate(100%);
+    width: 100vw;
 }
 
 .menu__backdrop--open {
@@ -177,9 +177,10 @@ Navbar
 }
 .btn__menu--close {
     position: absolute;
-    right: 32px;
+    right: 24px;
     fill: #6030b1;
     top: 24px;
+    z-index: 1000;
 }
 
 .menu__links {
@@ -214,30 +215,14 @@ Header
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    height: calc(100vh - 80px);
+    height: calc(100vh - 100px);
     padding: 0 24px;
 }
 
-.header__search--input {
-    border-radius: 20px;
-    border: 1px solid #0a1f44;
-    padding: 0 24px;
-    width: 100%;
-    height: 70px;
-}
-.header__search--input::placeholder {
-    color: #757575;
-    font-size: 20px;
-}
-.header__search--button {
-    border-radius: 20px;
-    padding: 0 48px;
-    height: 100%;
-    height: 70px;
-}
-.header__img--wrapper {
+.header__img--wrapper img {
     max-width: 950px;
     margin: 0 auto;
+    max-height: 50vh;
 }
 
 /* 
@@ -293,9 +278,9 @@ Car Card
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.17);
     display: flex;
     flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
     gap: 8px;
-}
-.car__card--container {
     color: initial !important;
 }
 .car__stock {
@@ -307,6 +292,7 @@ Car Card
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 4px;
 }
 .car__price {
     font-weight: bold;
@@ -325,11 +311,52 @@ Search Component
 .search__wrapper {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
-    gap: 32px;
+    flex-direction: column;
+    position: relative;
+}
+.search__wrapper--container {
+    display: flex;
+    width: 100%;
+    gap: 16px;
+}
+.search--input {
+    border-radius: 20px;
+    border: 1px solid #0a1f44;
+    padding: 0 24px;
+    width: 100%;
+    height: 70px;
 }
 
+.search--input::placeholder {
+    color: #757575;
+    font-size: 20px;
+}
+.search--button {
+    border-radius: 20px;
+    padding: 0 48px;
+    height: 100%;
+    height: 70px;
+}
+.search__dropdown--wrapper {
+    width: 100%;
+    max-width: 420px;
+    width: 100%;
+    max-width: 420px;
+    position: absolute;
+    bottom: 0;
+}
+.search__dropdown--content {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background: white;
+    width: 100%;
+}
+.search__alert {
+    position: absolute;
+}
 /* 
 
 Car Details
@@ -344,6 +371,7 @@ Car Details
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 8px;
 }
 .car__details--header h3 {
     font-weight: 100;
@@ -353,9 +381,13 @@ Car Details
 .car__details--title {
     font-weight: 500;
     font-size: 48px;
-    line-height: 72px;
+    line-height: 48px;
     letter-spacing: 0.26px;
     color: white;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0 4px;
 }
 .car__details--title span {
     margin-left: 8px;
@@ -418,7 +450,7 @@ Car Details
 .car__spec {
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: flex-start;
     gap: 8px;
     max-width: 48%;
     width: 100%;
@@ -513,7 +545,7 @@ Respnsive
     .header__container {
         padding: 0 16px;
     }
-    .search__swrapper {
+    .search__wrapper {
         flex-direction: column;
     }
     .header__search--button {
@@ -526,6 +558,9 @@ Respnsive
 }
 
 @media (max-width: 576px) {
+    .container {
+        padding: 32px 16px;
+    }
     nav {
         height: 80px;
     }
@@ -543,9 +578,23 @@ Respnsive
     }
     .car__card--container {
         padding: 16px;
-        max-width: 180px;
+        max-width: 46%;
     }
-
+    .car__price,
+    .car__model {
+        font-size: 14px;
+    }
+    .search__wrapper {
+        flex-wrap: wrap;
+    }
+    .car__spec {
+        max-width: 100%;
+    }
+    .car__details--header-links-wrapper {
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
     .footer__wrapper {
         gap: 8px;
         flex-direction: column;

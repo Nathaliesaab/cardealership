@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { CarCard } from "./ui/CarCard";
 import { Search } from "../common/Search/Search";
-import { LoadingCard } from "./ui/LoadingCard";
 export const FindYourCar = () => {
   const [cars, setCars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,15 +43,9 @@ export const FindYourCar = () => {
               ? Array(20)
                   .fill()
                   .map((item, index) => (
-                    <div key={index}>
-                      <LoadingCard />
-                    </div>
+                    <div key={index} className="loading__card"></div>
                   ))
-              : cars?.map((car, index) => (
-                  <div key={index}>
-                    <CarCard car={car} />
-                  </div>
-                ))}
+              : cars?.map((car) => <CarCard car={car} key={car.id} />)}
           </div>
         </div>
       </div>

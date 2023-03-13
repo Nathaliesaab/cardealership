@@ -26,33 +26,6 @@ namespace car_dealership.Models
             return new MySqlConnection(ConnectionString);
         }
 
-        public List<Employee> GetAllFilms()
-        {
-            List<Employee> list = new List<Employee>();
-
-            using (MySqlConnection conn = GetConnection())
-            {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select * from EMPLOYEE", conn);
-                using (MySqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        list.Add(new Employee()
-                        {
-                            IdEmployee = reader.GetInt32("IdEmployee"),
-                            Name = reader.GetString("Name"),
-                            Email = reader.GetString("Email"),
-                            Address = reader.GetString("Address"),
-                            Phone = reader.GetString("Phone")
-                        });
-                    }
-                }
-            }
-
-            return list;
-        }
-
         public List<Car> GetAllCars()
         {
             List<Car> list = new List<Car>();
@@ -60,7 +33,7 @@ namespace car_dealership.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select id,model,make,year,price,stock_quantity from car", conn);
+                MySqlCommand cmd = new MySqlCommand("select id,model,make,year,price,stock_quantity,color from car", conn);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -72,7 +45,8 @@ namespace car_dealership.Models
                             make = reader.GetString("make"),
                             year = reader.GetInt16("year"),
                             price = reader.GetDecimal("price"),
-                            stockQuantity = reader.GetInt16("stock_quantity")
+                            stockQuantity = reader.GetInt16("stock_quantity"),
+                            color = reader.GetString("color"),
                         });
                     }
                 }
@@ -158,21 +132,21 @@ namespace car_dealership.Models
         //}
 
 
-        public List<Car> Search(string keyword)
-        {
-            var query = GetAllCars().AsQueryable();
+        //     public List<Car> Search(string keyword)
+        //     {
+        //         var query = GetAllCars().AsQueryable();
 
-            if (!string.IsNullOrEmpty(keyword))
-            {
-                query = query.Where(c =>
-                    c.make.Contains(keyword) ||
-                    c.model.Contains(keyword) ||
-                    c.year.ToString().Contains(keyword) ||
-                    c.color.Contains(keyword));
-            }
+        //         if (!string.IsNullOrEmpty(keyword))
+        //         {
+        //             query = query.Where(c =>
+        //                 c.make.Contains(keyword) ||
+        //                 c.model.Contains(keyword) ||
+        //                 c.year.ToString().Contains(keyword) ||
+        //                 c.color.Contains(keyword));
+        //         }
 
-            return query.ToList();
-        }
+        //         return query.ToList();
+        //     }
     }
 }
 

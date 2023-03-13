@@ -1,58 +1,74 @@
-// import { useCallback, useEffect, useState } from "react";
-// import { apiRoutes } from "@/http/routes";
-// import { PaginatedResponse } from "@/declarations/http";
-// import useSWR from "swr";
-// import SearchDropdownItem from "./SearchDropdownItem";
-// import { debounce } from "lodash";
+import { useState, useCallback, useEffect } from "react";
+import { debounce } from "lodash";
 
-// const SearchDropdow = ({ search, className }) => {
-//   const [searchUrl, setSearchUrl] = useState("");
-//   const { data: items } = useSWR(searchUrl);
+const SearchDropdown = ({ search }) => {
+  const [searchUrl, setSearchUrl] = useState("");
+  const [items, setItems] = useState([]);
+  const searchAllCars = async (searchUrl) => {
+    try {
+      const response = await fetch(searchUrl)
+        .then((result) => result.json())
+        .then((res) => {
+          return res.cars;
+        });
+      return [response, null];
+    } catch (error) {
+      return [null, error];
+    }
+  };
 
-//   // eslint-disable-next-line react-hooks/exhaustive-deps
-//   const doSearch = useCallback(
-//     debounce(
-//       (keyword) =>
-//         keyword.length > 2 &&
-//         setSearchUrl(apiRoutes.search({ keyword, page: "1" })),
-//       500
-//     ),
-//     []
-//   );
+  const searchCars = async (searchUrl) => {
+    const [result, error] = await searchAllCars(searchUrl);
+    if (error) {
+      return;
+    }
+    setItems(result);
+  };
 
-//   // eslint-disable-next-line react-hooks/exhaustive-deps
-//   useEffect(() => {
-//     doSearch(search);
-//   }, [search]);
+  const doSearch = useCallback(
+    debounce(
+      (keyword) =>
+        keyword.length > 2 && setSearchUrl(`api/car/search/${keyword}`),
+      500
+    ),
+    []
+  );
 
-//   return (
-//     <div className={className}>
-//       {search.length < 3 ? (
-//         <span className="p-4 block bg-base-100">
-//           Please enter at least 3 characters
-//         </span>
-//       ) : (
-//         <ul className="dropdown-content menu p-2 shadow bg-base-100 w-full rounded-none">
-//           {items ? (
-//             <>
-//               {items.data.slice(0, 10).map((item) => (
-//                 <SearchDropdownItem key={item.sku} searchItem={item} />
-//               ))}
-//               {items.pager.totalItems === "0" && (
-//                 <li className="rounded-none hover:z-50 z-50 py-2">
-//                   No results found.
-//                 </li>
-//               )}
-//             </>
-//           ) : (
-//             <li className="rounded-none hover:z-50 z-50 py-2 text-primary pulsate">
-//               Loading...
-//             </li>
-//           )}
-//         </ul>
-//       )}
-//     </div>
-//   );
-// };
+  useEffect(() => {
+    doSearch(search);
+  }, [search]);
 
-// export default SearchDropdown;
+  useEffect(() => {
+    searchCars(searchUrl);
+  }, [searchUrl]);
+
+  return (
+    <div className="search__dropdown--wrapper">
+      {search.length < 3 ? (
+        <span className="search__alert">Please enter at least 3 characters</span>
+      ) : (
+        <ul className="search__dropdown--content">
+          {items ? (
+            <>
+              {items.slice(0, 10).map((item) => (
+                // <SearchDropdownItem key={item.sku} searchItem={item} />
+                <li key={item.id}>{item.model}</li>
+              ))}
+              {!items && (
+                <li className="rounded-none hover:z-50 z-50 py-2">
+                  No results found.
+                </li>
+              )}
+            </>
+          ) : (
+            <li className="rounded-none hover:z-50 z-50 py-2 text-primary pulsate">
+              Loading...
+            </li>
+          )}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+export default SearchDropdown;
