@@ -49,7 +49,7 @@ namespace car_dealership.Controllers
 
             if (cars.Count == 0)
             {
-                return NotFound(keyword);
+                return Ok(new List<Car>());
             }
 
             var result = new
@@ -60,7 +60,9 @@ namespace car_dealership.Controllers
                     make = c.make,
                     model = c.model,
                     year = c.year,
-                    color = c.color
+                    color = c.color,
+                    colorCode = c.colorCode,
+                    image = c.image
                 })
             };
 

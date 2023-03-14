@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Building from "../assets/Building.png";
-import { Search } from "../common/Search/Search";
+import { Search } from "./common/Search/Search";
 
 export const Landing = () => {
   return (

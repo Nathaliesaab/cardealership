@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CarCard } from "./ui/CarCard";
-import { Search } from "../common/Search/Search";
+import { Search } from "./common/Search/Search";
 export const FindYourCar = () => {
   const [cars, setCars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,14 +32,12 @@ export const FindYourCar = () => {
     <section id="find__your--car">
       <div className="find__your--car--search">
         <h2 className="find__your--car-title">Welcome to fastkar Buying</h2>
-        <div className="find__your--car--search-wrapper">
-          <Search />
-        </div>
+        <Search />
       </div>
       <div className="container">
         <div className="row">
           <div className="find__your--car--cars--wrapper">
-            {isLoading // Check if isLoading is true
+            {isLoading
               ? Array(20)
                   .fill()
                   .map((item, index) => (

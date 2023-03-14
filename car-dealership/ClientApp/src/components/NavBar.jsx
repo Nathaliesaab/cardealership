@@ -2,8 +2,8 @@ import Logo from "../assets/logo.png";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import AppRoutes from "../AppRoutes";
-import { HamburgerIcon } from "../common/icons/HamburgerIcons";
-import { CloseIcon } from "../common/icons/CloseIcons";
+import { HamburgerIcon } from "./common/icons/HamburgerIcons";
+import { CloseIcon } from "./common/icons/CloseIcon";
 
 export const Navbar = () => {
   const [displayMenu, setDisplayMenu] = useState(false);

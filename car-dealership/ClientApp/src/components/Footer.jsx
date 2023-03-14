@@ -1,10 +1,9 @@
-import { FacebookIcon } from "../common/icons/FacebookIcon";
-import { InstagramIcon } from "../common/icons/InstagramIcon";
-import { TwitterIcon } from "../common/icons/TwitterIcon";
+import { FacebookIcon } from "./common/icons/FacebookIcon";
+import { InstagramIcon } from "./common/icons/InstagramIcon";
+import { TwitterIcon } from "./common/icons/TwitterIcon";
 import { useLocation } from "react-router-dom";
 export const Footer = () => {
   const location = useLocation();
-  console.log(location.pathname);
   const socials = [
     {
       link: "instagram.com",

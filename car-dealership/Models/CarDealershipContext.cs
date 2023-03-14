@@ -33,7 +33,7 @@ namespace car_dealership.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select id,model,make,year,price,stock_quantity,color from car", conn);
+                MySqlCommand cmd = new MySqlCommand("select id,model,make,year,image,price,stock_quantity,color,color_code from car", conn);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -47,6 +47,8 @@ namespace car_dealership.Models
                             price = reader.GetDecimal("price"),
                             stockQuantity = reader.GetInt16("stock_quantity"),
                             color = reader.GetString("color"),
+                            colorCode = reader.GetString("color_code"),
+                            image = reader.GetString("image")
                         });
                     }
                 }
@@ -98,6 +100,7 @@ namespace car_dealership.Models
                             chosenCar.passengers = reader.GetInt16("passengers");
                             chosenCar.numberOfDoors = reader.GetInt16("number_of_doors");
                             chosenCar.driveType = reader.GetString("drive_type");
+                            chosenCar.image = reader.GetString("image");
                         }
                     }
                 }

@@ -1,8 +1,14 @@
-import { FavouriteIcon } from "../../common/icons/FavouriteIcons";
-import Car from "../../assets/Car.png";
+import { FavouriteIcon } from "../common/icons/FavouriteIcons";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 export const CarCard = ({ car }) => {
-  return (
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const quantityText = () => {
+    return car.stockQuantity === 1
+      ? `${car.stockQuantity} car`
+      : `${car.stockQuantity} cars`;
+  };
+  return imageLoaded ? (
     <Link
       className="car__card--container"
       to={{
@@ -14,11 +20,7 @@ export const CarCard = ({ car }) => {
         {car.stockQuantity === 0 ? (
           <span className="car__out--of-stock">Out of Stock</span>
         ) : (
-          `${
-            car.stockQuantity === 1
-              ? `${car.stockQuantity} car`
-              : `${car.stockQuantity} cars`
-          } `
+          quantityText()
         )}
       </h5>
       <div>
@@ -27,11 +29,15 @@ export const CarCard = ({ car }) => {
           {car.make} {car.model}
         </h3>
       </div>
-
-      <img src={Car} alt="Car" />
+      <img
+        src={car.image}
+        alt="Car"
+        onLoad={() => setImageLoaded(true)}
+        style={{ display: `${imageLoaded ? "flex" : "none"}` }}
+      />
       <div className="car__price--wrapper">
         <h4>
-          Starting at{" "}
+          Starting at
           <span className="purple car__price">
             ${car.price.toLocaleString()}
           </span>
@@ -39,5 +45,14 @@ export const CarCard = ({ car }) => {
         <FavouriteIcon />
       </div>
     </Link>
+  ) : (
+    <div className="loading__card">
+      <img
+        src={car.image}
+        alt="Car"
+        onLoad={() => setImageLoaded(true)}
+        style={{ display: `${imageLoaded ? "flex" : "none"}` }}
+      />
+    </div>
   );
 };
