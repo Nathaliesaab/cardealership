@@ -33,7 +33,7 @@ namespace car_dealership.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("select id,model,make,year,image,price,stock_quantity,color,color_code from car", conn);
+                MySqlCommand cmd = new MySqlCommand("select * from car", conn);
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -48,7 +48,9 @@ namespace car_dealership.Models
                             stockQuantity = reader.GetInt16("stock_quantity"),
                             color = reader.GetString("color"),
                             colorCode = reader.GetString("color_code"),
-                            image = reader.GetString("image")
+                            image = reader.GetString("image"),
+                            driveType = reader.GetString("drive_type"),
+                            description = reader.GetString("description"),
                         });
                     }
                 }
@@ -62,16 +64,6 @@ namespace car_dealership.Models
         {
             Car chosenCar = new Car();
 
-            //This creates a new instance of the MySqlConnection class using the GetConnection method,
-            //which presumably returns a new connection object. The using statement ensures that the
-            //connection object is properly disposed of when the statement completes
-            //, by calling its Dispose method.
-            //This is important because database connections are a limited resource and can c
-            //ause issues if they are not properly managed and released.
-            //When the using block is exited(either normally or because of an exception),
-            //the Dispose method of the MySqlConnection object is called automatically.
-            //This method closes the connection to the database and releases any resources
-            //that were allocated to the connection object, such as network sockets or database connections.
             using (var conn = GetConnection())
             {
                 await conn.OpenAsync();
@@ -134,22 +126,6 @@ namespace car_dealership.Models
         //    return RedirectToAction("Index", "Home");
         //}
 
-
-        //     public List<Car> Search(string keyword)
-        //     {
-        //         var query = GetAllCars().AsQueryable();
-
-        //         if (!string.IsNullOrEmpty(keyword))
-        //         {
-        //             query = query.Where(c =>
-        //                 c.make.Contains(keyword) ||
-        //                 c.model.Contains(keyword) ||
-        //                 c.year.ToString().Contains(keyword) ||
-        //                 c.color.Contains(keyword));
-        //         }
-
-        //         return query.ToList();
-        //     }
     }
 }
 

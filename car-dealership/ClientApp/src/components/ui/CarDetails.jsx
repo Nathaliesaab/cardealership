@@ -5,6 +5,7 @@ import { PassengerIcon } from "../common/icons/PassengerIcon";
 import { SafetyIcon } from "../common/icons/SafetyIcon";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { get_car } from "../../api/car_apis";
 
 export const CarDetails = () => {
   const [carDetails, setCarDetails] = useState({});
@@ -12,19 +13,9 @@ export const CarDetails = () => {
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
   const id = urlParams.get("id");
-  const getCarData = async () => {
-    try {
-      const response = await fetch(`/api/car/${id}`).then((result) => {
-        return result.json();
-      });
-      return [response, null];
-    } catch (error) {
-      return [null, error];
-    }
-  };
 
   const getCar = async () => {
-    const [result, error] = await getCarData();
+    const [result, error] = await get_car(id);
     if (error) {
       return;
     }

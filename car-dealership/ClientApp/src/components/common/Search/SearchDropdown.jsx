@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { search_cars } from "../../../api/car_apis";
 import useDebounce from "../../../reactHooks/useDebounce";
 
 import { SearchDropdownItem } from "./SearchDropdownItem";
@@ -6,21 +7,8 @@ const SearchDropdown = ({ search }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const searchUrl = useDebounce(`api/car/search/${search}`, 500);
-  const searchAllCars = async (searchUrl) => {
-    try {
-      const response = await fetch(searchUrl)
-        .then((result) => result.json())
-        .then((res) => {
-          return res.cars;
-        });
-      return [response, null];
-    } catch (error) {
-      return [null, error];
-    }
-  };
-
   const searchCars = async (searchUrl) => {
-    const [result, error] = await searchAllCars(searchUrl);
+    const [result, error] = await search_cars(searchUrl);
     if (error) {
       return;
     }

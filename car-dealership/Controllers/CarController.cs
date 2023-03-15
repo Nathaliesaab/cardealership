@@ -42,7 +42,9 @@ namespace car_dealership.Controllers
                     c.make.ToUpper().Contains(keyword.ToUpper()) ||
                     c.year.ToString().StartsWith(keyword) ||
                     c.model.ToUpper().Contains(keyword.ToUpper()) ||
-                    c.color.ToUpper().Contains(keyword.ToUpper())
+                    c.color.ToUpper().Contains(keyword.ToUpper()) ||
+                    c.driveType.ToUpper().Contains(keyword.ToUpper()) ||
+                    c.description.ToUpper().Contains(keyword.ToUpper())
                 );
             }
             var cars = query.ToList();

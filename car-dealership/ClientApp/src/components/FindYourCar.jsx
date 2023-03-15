@@ -1,21 +1,10 @@
 import { useEffect, useState } from "react";
 import { CarCard } from "./ui/CarCard";
 import { Search } from "./common/Search/Search";
+import { getAllCars } from "../api/car_apis";
 export const FindYourCar = () => {
   const [cars, setCars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const getAllCars = async () => {
-    try {
-      const response = await fetch("/api/car").then((result) => {
-        return result.json();
-      });
-      return [response, null];
-    } catch (error) {
-      return [null, error];
-    }
-  };
-
   const getCars = async () => {
     const [result, error] = await getAllCars();
     if (error) {
@@ -37,13 +26,9 @@ export const FindYourCar = () => {
       <div className="container">
         <div className="row">
           <div className="find__your--car--cars--wrapper">
-            {isLoading
-              ? Array(20)
-                  .fill()
-                  .map((item, index) => (
-                    <div key={index} className="loading__card"></div>
-                  ))
-              : cars?.map((car) => <CarCard car={car} key={car.id} />)}
+            {cars?.map((car) => (
+              <CarCard car={car} key={car.id} />
+            ))}
           </div>
         </div>
       </div>

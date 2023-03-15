@@ -14,6 +14,7 @@ export const FavouriteIcon = () => {
           stroke="black"
           strokeOpacity="0.9"
           strokeWidth="1.41421"
+          className="favourite__icon"
         />
       </g>
       <defs>

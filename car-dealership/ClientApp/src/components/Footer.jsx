@@ -1,23 +1,7 @@
-import { FacebookIcon } from "./common/icons/FacebookIcon";
-import { InstagramIcon } from "./common/icons/InstagramIcon";
-import { TwitterIcon } from "./common/icons/TwitterIcon";
 import { useLocation } from "react-router-dom";
+import { socials } from "./footer_socials";
 export const Footer = () => {
   const location = useLocation();
-  const socials = [
-    {
-      link: "instagram.com",
-      icon: <InstagramIcon />,
-    },
-    {
-      link: "twitter.com",
-      icon: <TwitterIcon />,
-    },
-    {
-      link: "facebook.com",
-      icon: <FacebookIcon />,
-    },
-  ];
   return location.pathname === "/" ? (
     <></>
   ) : (
