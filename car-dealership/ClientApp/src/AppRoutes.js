@@ -1,3 +1,4 @@
+import { Account } from "./components/Account";
 import { FindYourCar } from "./components/FindYourCar";
 import { Landing } from "./components/Landing";
 import { CarDetails } from "./components/ui/CarDetails";
@@ -19,6 +20,12 @@ const AppRoutes = [
     path: "/car-details",
     linkValue: "Car Details",
     element: <CarDetails />,
+    display: false,
+  },
+  {
+    path: "/account",
+    linkValue: "Account",
+    element: <Account />,
     display: false,
   },
 ];

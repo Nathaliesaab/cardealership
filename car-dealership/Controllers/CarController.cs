@@ -1,5 +1,6 @@
 ﻿using car_dealership.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace car_dealership.Controllers
@@ -8,20 +9,23 @@ namespace car_dealership.Controllers
 
     public class CarController : ControllerBase
     {
+        private CarDealershipContext _context;
+        public CarController(CarDealershipContext context)
+        {
+            _context = context;
+        }
+
         [Route("api/[controller]")]
         public IActionResult Index()
         {
-            CarDealershipContext? context = HttpContext.RequestServices.GetService(typeof(car_dealership.Models.CarDealershipContext)) as CarDealershipContext;
-
-            return StatusCode(StatusCodes.Status200OK, context?.GetAllCars());
+            return StatusCode(StatusCodes.Status200OK, _context?.GetAllCars());
         }
 
         [HttpGet]
         [Route("api/[controller]/{id}")]
         public async Task<IActionResult> GetCarDetailsAsync(int id)
         {
-            CarDealershipContext? context = HttpContext.RequestServices.GetService(typeof(car_dealership.Models.CarDealershipContext)) as CarDealershipContext;
-            var car = await context?.GetCarDetailsAsync(id);
+            var car = await _context?.GetCarDetailsAsync(id);
             if (car.id == 0)
             {
                 return StatusCode(StatusCodes.Status200OK, $"Car with id: {id} is not found");
@@ -34,8 +38,7 @@ namespace car_dealership.Controllers
         [Route("api/[controller]/search/{keyword}")]
         public IActionResult SearchCars(string keyword)
         {
-            CarDealershipContext? context = HttpContext.RequestServices.GetService(typeof(car_dealership.Models.CarDealershipContext)) as CarDealershipContext;
-            var query = context?.GetAllCars().AsQueryable();
+            var query = _context?.GetAllCars().AsQueryable();
             if (!string.IsNullOrEmpty(keyword))
             {
                 query = query.Where(c =>

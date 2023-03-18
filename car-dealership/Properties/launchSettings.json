@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "RankingApp": {
+    "CarDealership": {
       "commandName": "Project",
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7291;http://localhost:5291",

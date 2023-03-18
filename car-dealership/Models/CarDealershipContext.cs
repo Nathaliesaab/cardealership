@@ -1,14 +1,5 @@
-﻿using System;
-using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using MySql.Data.MySqlClient;
 using System.Data;
-using Mysqlx.Crud;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc;
 
 namespace car_dealership.Models
 {
@@ -102,29 +93,138 @@ namespace car_dealership.Models
         }
 
 
-        //[HttpPost]
-        //public ActionResult Create(Customer customer)
-        //{
-        //    // Connect to the database
-        //    using (var connection = GetConnection())
-        //    {
-        //        connection.Open();
+        public async Task<Customer> Create(Customer customer)
+        {
+            // Connect to the database
+            using (var connection = GetConnection())
+            {
+                await connection.OpenAsync();
 
-        //        // Insert the customer into the database
-        //        var query = "INSERT INTO Customers (Name, Email, Password) VALUES (@Name, @Email, @Password)";
-        //        using (var command = new MySqlCommand(query, connection))
-        //        {
-        //            command.Parameters.AddWithValue("@Name", customer.name);
-        //            command.Parameters.AddWithValue("@Email", customer.email);
-        //            command.Parameters.AddWithValue("@Password", customer.password);
+                // Insert the customer into the database
+                var query = "INSERT INTO customer (name, email, password) VALUES (@Name, @Email, @Password)";
+                using (var command = new MySqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@Name", customer.name);
+                    command.Parameters.AddWithValue("@Email", customer.email);
+                    command.Parameters.AddWithValue("@Password", customer.password);
 
-        //            command.ExecuteNonQuery();
-        //        }
-        //    }
+                    command.ExecuteNonQuery();
+                }
+            }
 
-        //    //return true;
-        //    return RedirectToAction("Index", "Home");
-        //}
+            return customer;
+            // return RedirectToAction("Index", "Home");
+        }
+
+
+        public async Task<Customer> GetCustomer(Customer customer)
+        {
+            Customer cust = new Customer();
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                var query = "select * from customer where email = @custEmail and password = @custPassword";
+
+                using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@custEmail", customer.email);
+                    cmd.Parameters.AddWithValue("@custPassword", customer.password);
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            cust.id = reader.GetInt16("id");
+                            cust.name = reader.GetString("name");
+                            cust.email = reader.GetString("email");
+                            cust.password = reader.GetString("password");
+                        }
+                    }
+
+                }
+            }
+
+            return cust;
+        }
+
+
+        public async Task<RefreshToken> GetRefreshToken(int userId, string refreshToken = null)
+        {
+            RefreshToken token = null;
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                var query = "SELECT * FROM refreshtoken WHERE userId = @userId";
+                if (!string.IsNullOrEmpty(refreshToken))
+                {
+                    query += " AND refreshToken = @refreshToken";
+                }
+
+                using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@userId", userId);
+                    if (!string.IsNullOrEmpty(refreshToken))
+                    {
+                        cmd.Parameters.AddWithValue("@refreshToken", refreshToken);
+                    }
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            token = new RefreshToken
+                            {
+                                userId = reader.GetInt16("userId"),
+                                refreshToken = reader.GetString("refreshToken"),
+                                tokenId = reader.GetString("tokenId")
+                            };
+                        }
+                    }
+                }
+            }
+
+            return token;
+        }
+
+
+        public async Task<bool> updateRefreshToken(int userId, string refreshToken)
+        {
+            RefreshToken token = new RefreshToken();
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                var query = "UPDATE refreshtoken SET refreshToken = @refreshToken where userId = @userId";
+
+                using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@userId", userId);
+                    cmd.Parameters.AddWithValue("@refreshToken", refreshToken);
+                    int rowsAffected = await cmd.ExecuteNonQueryAsync();
+                    return rowsAffected > 0;
+
+                }
+            }
+        }
+        public async Task<bool> InsertRefreshToken(int userId, string tokenId, string refreshToken)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                var query = "INSERT INTO refreshtoken (userId, tokenId, refreshToken) VALUES (@userId, @tokenId, @refreshToken)";
+
+                using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@userId", userId);
+                    cmd.Parameters.AddWithValue("@tokenId", tokenId);
+                    cmd.Parameters.AddWithValue("@refreshToken", refreshToken);
+                    int rowsAffected = await cmd.ExecuteNonQueryAsync();
+                    return rowsAffected > 0;
+                }
+            }
+        }
 
     }
 }

@@ -5,21 +5,10 @@ import { CloseIcon } from "../icons/CloseIcon";
 export const Search = () => {
   const [displayDropdown, setDisplayDropdown] = useState(false);
   const [search, setSearch] = useState("");
-
-  // const onSubmit = () => {
-  //   // return router.push(
-  //   //   clientRoutes.search({
-  //   //     keyword: `${encodeURIComponent(search)}`,
-  //   //     page: "1",
-  //   //   })
-  //   // );
-  // };
-
   function inputChangeHandler(value) {
     setSearch(value);
     setDisplayDropdown(true);
   }
-
   return (
     <div className="search__wrapper">
       <div className="search__wrapper--container">
