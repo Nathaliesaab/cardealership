@@ -6,10 +6,11 @@ import { HamburgerIcon } from "./common/icons/HamburgerIcons";
 import { CloseIcon } from "./common/icons/CloseIcon";
 import Login from "./LoginModel";
 import { UserContext } from "../providers/UserProvider";
+import Registration from "./Registration";
 
 export const Navbar = () => {
   const [displayMenu, setDisplayMenu] = useState(false);
-  const { displayLoginModal, setDisplayLoginModal, user } =
+  const { displayLoginModal, setDisplayLoginModal, user, displaySignupModal } =
     useContext(UserContext);
   return (
     <>
@@ -74,21 +75,32 @@ export const Navbar = () => {
                   </li>
                 )
             )}
-            <button
-              className="login__button btn__general"
-              onClick={() => {
-                {
-                  setDisplayLoginModal(!displayLoginModal);
-                  setDisplayMenu(!displayMenu);
-                }
-              }}
-            >
-              Login
-            </button>
+            {!user ? (
+              <button
+                className="login__button btn__general"
+                onClick={() => {
+                  {
+                    setDisplayLoginModal(!displayLoginModal);
+                    setDisplayMenu(!displayMenu);
+                  }
+                }}
+              >
+                Login
+              </button>
+            ) : (
+              <Link
+                className="login__button btn__general"
+                to={"/account"}
+                onClick={() => setDisplayMenu(!displayMenu)}
+              >
+                Account
+              </Link>
+            )}
           </ul>
         </div>
       </nav>
       {displayLoginModal && <Login />}
+      {displaySignupModal && <Registration />}
     </>
   );
 };

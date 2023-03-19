@@ -41,13 +41,14 @@ namespace car_dealership.Controllers
 
 
 
+        //Authentication endpoit
         [Route("api/[controller]/authenticate")]
         [HttpPost]
         public async Task<IActionResult> Authenticate([FromBody] Customer customer)
         {
             TokenResponse tokenResponse = new TokenResponse();
-            Customer _user = await _context.GetCustomer(customer);
-            if (_user.email == null)
+            Customer _user = await _context.AuthenticateCustomer(customer);
+            if (_user == null)
                 return Unauthorized();
 
             var tokenhandler = new JwtSecurityTokenHandler();
@@ -62,7 +63,7 @@ namespace car_dealership.Controllers
                         new Claim(ClaimTypes.Email, _user.email),
                     }
                 ),
-                Expires = DateTime.Now.AddMinutes(20),
+                Expires = DateTime.Now.AddMinutes(120),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenkey), SecurityAlgorithms.HmacSha256)
             };
             var token = tokenhandler.CreateToken(tokenDescriptor);
@@ -76,6 +77,7 @@ namespace car_dealership.Controllers
             return Ok(response);
         }
 
+        // Generate a refresh token endpoint
         [Route("api/[controller]/refresh")]
         [HttpPost]
         public async Task<IActionResult> Refresh([FromBody] TokenResponse token)
@@ -105,19 +107,24 @@ namespace car_dealership.Controllers
         {
             try
             {
+                // Generate a random salt
+                string salt = BCrypt.Net.BCrypt.GenerateSalt();
+                // Hash the password using bcrypt with the salt
+                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.password, salt);
+
                 // Check if a customer with the same email already exists
-                // var existingCustomer = await context.Customers.FirstOrDefaultAsync(c => c.Email == request.Email);
-                // if (existingCustomer != null)
-                // {
-                // return BadRequest("A customer with the same email already exists.");
-                // }
+                var existingCustomer = await _context.CustomerExistsByEmail(request.email);
+                if (existingCustomer)
+                {
+                    return BadRequest("Customer with the same email already exists.");
+                }
 
                 // Create a new customer object
                 var newCustomer = new Customer
                 {
                     email = request.email,
                     name = request.name,
-                    password = request.password // In a production environment, you should hash and salt the password before saving it to the database
+                    password = hashedPassword,
                 };
 
                 // Add the new customer to the database and save changes

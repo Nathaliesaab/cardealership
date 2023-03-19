@@ -16,6 +16,7 @@
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'RankingApp' " />
   <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="7.0.3" />
     <PackageReference Include="MySql.Data" Version="8.0.32" />

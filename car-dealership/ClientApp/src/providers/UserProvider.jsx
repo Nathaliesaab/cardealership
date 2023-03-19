@@ -1,20 +1,22 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import jwtDecode from "jwt-decode";
+import { customer_saved_cars, register, sign_in } from "../api/customer_apis";
 
 export const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [displayLoginModal, setDisplayLoginModal] = useState(false);
-  //   const navigate = useNavigate();
+  const [displaySignupModal, setDisplaySignupModal] = useState(false);
+  const [favourites, setFavourites] = useState([]);
+  const token = localStorage.getItem("jwt");
 
-  let avatarString = "";
-  if (!!user) {
-    // const { firstName, lastName } = user;
-    // avatarString = firstName.charAt(0) + lastName.charAt(0);
-  }
+  const carSaved = (id) => {
+    return favourites?.find((item) => item.id === id);
+  };
+  // const navigate = useNavigate();
   const showToast = (message, isError = false) => {
     if (isError) {
       toast.error(message);
@@ -22,44 +24,47 @@ export const UserProvider = ({ children }) => {
       toast.success(message);
     }
   };
-  const signIn = async (credentials) => {
-    try {
-      const res = await fetch("/api/customer/authenticate", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(credentials),
-      });
 
-      const resp = await res.json();
-      if (res.ok) {
-        showToast("Success");
-        localStorage.setItem("jwt", JSON.stringify(resp.jwtToken));
-        setUser(resp.customer);
-        setDisplayLoginModal(false);
-        // navigate("/findyourcar");
-      } else {
-        showToast("Login failed, invalid credentials", true);
-      }
-    } catch (err) {
-      showToast(`Login Failed due to: ${err.message}`, true);
+  const registerCustomer = async (user) => {
+    const [response, error] = await register(user);
+    if (response.status == 200) {
+      showToast(response);
+      setDisplaySignupModal(false);
+      signIn({ email: user.email, password: user.password });
+    } else {
+      showToast(response, true);
     }
+  };
+
+  const signIn = async (credentials) => {
+    const [response, error] = await sign_in(credentials);
+    if (response.jwtToken) {
+      showToast("Success");
+      setUser(response.customer);
+      setDisplayLoginModal(false);
+    }
+    showToast(response, true);
+    if (error) showToast(error, true);
   };
 
   const signOut = () => {
     // Perform sign-out logic and reset user state
     localStorage.removeItem("jwt");
     setUser(null);
+    setFavourites([]);
   };
-  const token = localStorage.getItem("jwt");
-  useEffect(() => {
-    console.log("refreshed");
-    // Check if a valid JWT is present in local storage
 
+  useEffect(() => {
+    // Check if a valid JWT is present in local storage
     if (token) {
       try {
         // Verify the JWT and decode its payload
         const payload = jwtDecode(token);
-        console.log(payload);
+        const expirationTime = payload.exp;
+        const currentTime = Date.now() / 1000; // convert to seconds
+        if (expirationTime < currentTime) {
+          localStorage.removeItem("jwt");
+        }
         // Set the user's information in the app's state
         setUser({
           id: payload.id,
@@ -73,9 +78,33 @@ export const UserProvider = ({ children }) => {
     }
   }, [token]);
 
+  const getSavedCars = async () => {
+    const [result, error] = await customer_saved_cars(user?.id);
+    if (result) {
+      setFavourites(result);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      getSavedCars();
+    }
+  }, [user?.id]);
   return (
     <UserContext.Provider
-      value={{ user, signIn, signOut, setDisplayLoginModal, displayLoginModal }}
+      value={{
+        user,
+        signIn,
+        signOut,
+        setDisplayLoginModal,
+        showToast,
+        displayLoginModal,
+        registerCustomer,
+        displaySignupModal,
+        favourites,
+        setDisplaySignupModal,
+        carSaved,
+      }}
     >
       {children}
     </UserContext.Provider>

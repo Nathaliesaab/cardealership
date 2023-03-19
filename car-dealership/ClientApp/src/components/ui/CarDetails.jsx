@@ -4,8 +4,11 @@ import { CarIcon } from "../common/icons/CarIcon";
 import { PassengerIcon } from "../common/icons/PassengerIcon";
 import { SafetyIcon } from "../common/icons/SafetyIcon";
 import { useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { get_car } from "../../api/car_apis";
+import { favourite_car } from "../../api/customer_apis.js";
+import { UserContext } from "../../providers/UserProvider";
+import { unfavourite_car } from "../../api/customer_apis";
 
 export const CarDetails = () => {
   const [carDetails, setCarDetails] = useState({});
@@ -13,13 +16,32 @@ export const CarDetails = () => {
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
   const id = urlParams.get("id");
-
+  const { user, showToast, carSaved } = useContext(UserContext);
+  const saveCar = async () => {
+    const [result, error] = await favourite_car({
+      carId: id,
+      customerId: user.id,
+    });
+    if (result) {
+      showToast("Car added to favourite");
+    }
+  };
   const getCar = async () => {
     const [result, error] = await get_car(id);
     if (error) {
       return;
     }
     setCarDetails(result);
+  };
+  const removeCar = async () => {
+    const [result, error] = await unfavourite_car({
+      customerId: user?.id,
+      carId: carDetails?.id,
+    });
+    if (result) {
+      showToast("Car Unsaved");
+    }
+    showToast(error, true);
   };
   useEffect(() => {
     getCar();
@@ -208,7 +230,21 @@ export const CarDetails = () => {
                     <button className="btn__general continue__btn">
                       CONTINUE
                     </button>
-                    <button className="btn__general save__btn">SAVE</button>
+                    {!carSaved(carDetails.id) ? (
+                      <button
+                        className="btn__general save__btn"
+                        onClick={() => saveCar()}
+                      >
+                        SAVE
+                      </button>
+                    ) : (
+                      <button
+                        className="btn__general save__btn"
+                        onClick={() => removeCar()}
+                      >
+                        UNSAVE
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

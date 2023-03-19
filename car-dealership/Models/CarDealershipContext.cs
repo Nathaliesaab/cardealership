@@ -117,37 +117,61 @@ namespace car_dealership.Models
         }
 
 
-        public async Task<Customer> GetCustomer(Customer customer)
+        public async Task<Customer> AuthenticateCustomer(Customer customer)
         {
-            Customer cust = new Customer();
-
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                var query = "select * from customer where email = @custEmail and password = @custPassword";
+                var query = "SELECT * FROM customer WHERE email = @custEmail";
 
                 using (var cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@custEmail", customer.email);
-                    cmd.Parameters.AddWithValue("@custPassword", customer.password);
 
                     using (var reader = await cmd.ExecuteReaderAsync())
                     {
                         if (await reader.ReadAsync())
                         {
-                            cust.id = reader.GetInt16("id");
-                            cust.name = reader.GetString("name");
-                            cust.email = reader.GetString("email");
-                            cust.password = reader.GetString("password");
+                            string hashedPassword = reader.GetString("password");
+                            bool passwordMatches = BCrypt.Net.BCrypt.Verify(customer.password, hashedPassword);
+
+                            if (passwordMatches)
+                            {
+                                Customer authenticatedCustomer = new Customer
+                                {
+                                    id = reader.GetInt32("id"),
+                                    name = reader.GetString("name"),
+                                    email = reader.GetString("email")
+                                };
+
+                                return authenticatedCustomer;
+                            }
                         }
                     }
-
                 }
             }
 
-            return cust;
+            // If we reach this point, authentication failed
+            return null;
         }
 
+
+        public async Task<bool> CustomerExistsByEmail(string email)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                var query = "SELECT COUNT(*) FROM customer WHERE email = @custEmail";
+
+                using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@custEmail", email);
+                    var result = await cmd.ExecuteScalarAsync();
+
+                    return Convert.ToInt32(result) > 0;
+                }
+            }
+        }
 
         public async Task<RefreshToken> GetRefreshToken(int userId, string refreshToken = null)
         {
@@ -226,6 +250,67 @@ namespace car_dealership.Models
             }
         }
 
+        public async Task<bool> FavouriteCar(int carId, int userId)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                var query = "INSERT INTO favourite (customer_id, car_id) VALUES (@customerId, @carId)";
+
+                using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@customerId", userId);
+                    cmd.Parameters.AddWithValue("@carId", carId);
+                    int rowsAffected = await cmd.ExecuteNonQueryAsync();
+                    return rowsAffected > 0;
+                }
+            }
+        }
+
+        public async Task<List<Car>> GetCustomerFavouriteCars(int customerId)
+        {
+            List<Car> list = new List<Car>();
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("select c.id,c.make,c.model,c.image ,f.car_id from car c , favourite f where f.car_id = c.id and customer_id = @customerId; ", conn);
+                cmd.Parameters.AddWithValue("@customerId", customerId);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(new Car()
+                        {
+                            id = reader.GetInt16("id"),
+                            model = reader.GetString("model"),
+                            make = reader.GetString("make"),
+                            image = reader.GetString("image"),
+                        });
+                    }
+                }
+            }
+
+            return list;
+        }
+        public async Task<bool> UnfavouriteCar(int carId, int userId)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                var query = "DELETE FROM favourite WHERE customer_id = @customerId AND car_id = @carId";
+
+                using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@customerId", userId);
+                    cmd.Parameters.AddWithValue("@carId", carId);
+                    int rowsAffected = await cmd.ExecuteNonQueryAsync();
+                    return rowsAffected > 0;
+                }
+            }
+        }
+
     }
+
 }
 

@@ -8,8 +8,11 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { user, signIn, signOut, setDisplayLoginModal } =
-    useContext(UserContext);
+  const {
+    signIn,
+    setDisplayLoginModal,
+    setDisplaySignupModal,
+  } = useContext(UserContext);
 
   const validate = () => {
     let result = true;
@@ -30,14 +33,18 @@ const Login = () => {
     if (!validate()) {
       return;
     }
-
     const credentials = { email, password };
     signIn(credentials);
   };
+ 
 
   return (
-    <div className="login__modal">
-      <form onSubmit={ProceedLoginusingAPI} className="login__modal-content">
+    <div className="login--registration__modal">
+      <form
+        onSubmit={ProceedLoginusingAPI}
+        className="modal__content"
+        autoComplete="off"
+      >
         <span
           className="close__button"
           onClick={() => setDisplayLoginModal(false)}
@@ -52,7 +59,7 @@ const Login = () => {
           </label>
           <input
             type="text"
-            className="login__input"
+            className="modal__input"
             id="email"
             placeholder="Email"
             value={email}
@@ -66,7 +73,7 @@ const Login = () => {
           </label>
           <input
             type="password"
-            className="login__input password__input"
+            className="modal__input password__input"
             id="password"
             value={password}
             placeholder="........"
@@ -80,7 +87,16 @@ const Login = () => {
         >
           Sign In
         </button>
-        <a href="#">Sign Up here</a>
+        <div
+          onClick={() => {
+            {
+              setDisplayLoginModal(false);
+              setDisplaySignupModal(true);
+            }
+          }}
+        >
+          Sign Up here
+        </div>
       </form>
     </div>
   );
