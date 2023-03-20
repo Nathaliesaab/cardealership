@@ -2,9 +2,9 @@ import { FavouriteIcon } from "../common/icons/FavouriteIcons";
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { favourite_car } from "../../api/customer_apis.js";
-import { UserContext } from "../../providers/UserProvider";
+import { AppContext } from "../../providers/AppProvider";
 export const CarCard = ({ car, saved }) => {
-  const { user, showToast } = useContext(UserContext);
+  const { user, showToast } = useContext(AppContext);
   const [imageLoaded, setImageLoaded] = useState(false);
   const quantityText = () => {
     return car.stockQuantity === 1

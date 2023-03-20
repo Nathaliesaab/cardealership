@@ -310,6 +310,55 @@ namespace car_dealership.Models
             }
         }
 
+
+        // START REVIEW APIS
+
+        public async Task<bool> PostReview(Review request)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                var query = "INSERT INTO reviews (rating,customer_id,review, car_id) VALUES (@rating, @customerId, @review, @carId)";
+
+                using (var cmd = new MySqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@customerId", request.customerId);
+                    cmd.Parameters.AddWithValue("@carId", request.carId);
+                    cmd.Parameters.AddWithValue("@review", request.review);
+                    cmd.Parameters.AddWithValue("@rating", request.rating);
+                    int rowsAffected = await cmd.ExecuteNonQueryAsync();
+                    return rowsAffected > 0;
+                }
+            }
+        }
+
+        public async Task<List<CarReview>> GetCarReviews(int carId)
+        {
+            List<CarReview> reviews = new List<CarReview>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT r.rating,r.review ,c.name FROM reviews r ,customer c WHERE  r.car_id = @carId and c.id = r.customer_id;", conn);
+                cmd.Parameters.AddWithValue("@carId", carId);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+
+
+                    while (reader.Read())
+                    {
+                        reviews.Add(new CarReview()
+                        {
+                            rating = reader.GetInt16("rating"),
+                            review = reader.GetString("review"),
+                            name = reader.GetString("name"),
+                        });
+                    }
+                }
+            }
+            return reviews;
+        }
+
+
     }
 
 }

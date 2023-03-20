@@ -5,13 +5,13 @@ import AppRoutes from "../AppRoutes";
 import { HamburgerIcon } from "./common/icons/HamburgerIcons";
 import { CloseIcon } from "./common/icons/CloseIcon";
 import Login from "./LoginModel";
-import { UserContext } from "../providers/UserProvider";
+import { AppContext } from "../providers/AppProvider";
 import Registration from "./Registration";
 
 export const Navbar = () => {
   const [displayMenu, setDisplayMenu] = useState(false);
   const { displayLoginModal, setDisplayLoginModal, user, displaySignupModal } =
-    useContext(UserContext);
+    useContext(AppContext);
   return (
     <>
       <nav>

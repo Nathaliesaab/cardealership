@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "../providers/UserProvider";
-import { customer_saved_cars } from "../api/customer_apis";
+import { AppContext } from "../providers/AppProvider";
 import { SavedCar } from "./ui/SavedCar";
 export const Account = () => {
-  const { user, signOut, favourites } = useContext(UserContext);
+  const { user, signOut, favourites } = useContext(AppContext);
+
   return (
     <section id="account">
       <div className="container">
@@ -20,12 +20,12 @@ export const Account = () => {
               <span>{user?.name}</span>
             </div>
             <div className="account__details">
-              Saved:
+              Saved Cars
               <div className="saved__cars--wrapper">
                 {favourites?.map((car) => (
                   <SavedCar car={car} key={car.id} />
                 ))}
-                {!favourites.length && <span>No Saved Cars Yet</span>}
+                {!favourites?.length && <span>No Saved Cars Yet</span>}
               </div>
             </div>
             <div className="account__details btn__general logout__button">

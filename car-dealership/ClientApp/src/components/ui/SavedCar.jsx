@@ -1,24 +1,14 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { unfavourite_car } from "../../api/customer_apis";
-import { UserContext } from "../../providers/UserProvider";
+import { AppContext } from "../../providers/AppProvider";
 import { TrashIcon } from "../common/icons/TrashIcon";
 
 export const SavedCar = ({ car }) => {
-  const { user, showToast } = useContext(UserContext);
-  const removeCar = async () => {
-    const [result, error] = await unfavourite_car({
-      customerId: user?.id,
-      carId: car?.id,
-    });
-    if (result) {
-      showToast("Car Unsaved");
-    }
-    showToast(error, true);
-  };
+  const { removeCar } = useContext(AppContext);
+
   return (
     <div className="saved__car">
-      <div className="remove__car--icon" onClick={() => removeCar()}>
+      <div className="remove__car--icon" onClick={() => removeCar(car.id)}>
         <TrashIcon />
       </div>
       <Link

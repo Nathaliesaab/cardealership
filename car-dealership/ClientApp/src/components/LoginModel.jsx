@@ -1,18 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { CloseIcon } from "./common/icons/CloseIcon";
-import { useNavigate } from "react-router-dom";
-import { UserContext } from "../providers/UserProvider";
+import { AppContext } from "../providers/AppProvider";
 import { toast } from "react-toastify";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-  const {
-    signIn,
-    setDisplayLoginModal,
-    setDisplaySignupModal,
-  } = useContext(UserContext);
+  const { signIn, setDisplayLoginModal, setDisplaySignupModal } =
+    useContext(AppContext);
 
   const validate = () => {
     let result = true;
@@ -36,10 +31,9 @@ const Login = () => {
     const credentials = { email, password };
     signIn(credentials);
   };
- 
 
   return (
-    <div className="login--registration__modal">
+    <div className="general__modal">
       <form
         onSubmit={ProceedLoginusingAPI}
         className="modal__content"

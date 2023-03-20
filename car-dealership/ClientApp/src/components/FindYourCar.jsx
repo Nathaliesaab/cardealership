@@ -2,11 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import { CarCard } from "./ui/CarCard";
 import { Search } from "./common/Search/Search";
 import { getAllCars } from "../api/car_apis";
-import { UserContext } from "../providers/UserProvider";
+import { AppContext } from "../providers/AppProvider";
 export const FindYourCar = () => {
   const [cars, setCars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { carSaved } = useContext(UserContext);
+  const { isCarSaved, savedCars, user } = useContext(AppContext);
   const getCars = async () => {
     const [result, error] = await getAllCars();
     if (error) {
@@ -19,7 +19,11 @@ export const FindYourCar = () => {
   useEffect(() => {
     getCars();
   }, []);
-
+  useEffect(() => {
+    if (user) {
+      savedCars();
+    }
+  }, [user]);
   return (
     <section id="find__your--car">
       <div className="find__your--car--search">
@@ -30,7 +34,7 @@ export const FindYourCar = () => {
         <div className="row">
           <div className="find__your--car--cars--wrapper">
             {cars?.map((car) => (
-              <CarCard car={car} key={car.id} saved={carSaved(car.id)} />
+              <CarCard car={car} key={car.id} saved={isCarSaved(car?.id)} />
             ))}
           </div>
         </div>

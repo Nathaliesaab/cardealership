@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { UserContext } from "../providers/UserProvider";
+import { AppContext } from "../providers/AppProvider";
 import { CloseIcon } from "./common/icons/CloseIcon";
 import { toast } from "react-toastify";
 
@@ -8,7 +8,7 @@ const Registration = ({ onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { registerCustomer, displaySignupModal, setDisplaySignupModal } =
-    useContext(UserContext);
+    useContext(AppContext);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) {
@@ -27,7 +27,6 @@ const Registration = ({ onClose }) => {
     setName("");
     setEmail("");
     setPassword("");
-
   };
 
   const validate = () => {
@@ -44,7 +43,7 @@ const Registration = ({ onClose }) => {
   };
   return (
     displaySignupModal && (
-      <div className="login--registration__modal">
+      <div className="general__modal">
         <form
           onSubmit={handleSubmit}
           className="modal__content registration__modal"

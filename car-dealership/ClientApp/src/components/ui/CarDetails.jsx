@@ -6,9 +6,11 @@ import { SafetyIcon } from "../common/icons/SafetyIcon";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import { get_car } from "../../api/car_apis";
-import { favourite_car } from "../../api/customer_apis.js";
-import { UserContext } from "../../providers/UserProvider";
-import { unfavourite_car } from "../../api/customer_apis";
+import { AppContext } from "../../providers/AppProvider";
+import { RatingModal } from "../../components/Rating";
+import { car_reviews } from "../../api/reviews_apis";
+import { Review } from "./Review";
+import { Rating } from "react-simple-star-rating";
 
 export const CarDetails = () => {
   const [carDetails, setCarDetails] = useState({});
@@ -16,32 +18,38 @@ export const CarDetails = () => {
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
   const id = urlParams.get("id");
-  const { user, showToast, carSaved } = useContext(UserContext);
-  const saveCar = async () => {
-    const [result, error] = await favourite_car({
-      carId: id,
-      customerId: user.id,
-    });
-    if (result) {
-      showToast("Car added to favourite");
-    }
-  };
+  const {
+    isCarSaved,
+    removeCar,
+    saveCar,
+    setDisplayReviewModal,
+    displayReviewModal,
+    user,
+    showToast,
+    setReviews,
+    reviews,
+  } = useContext(AppContext);
+
   const getCar = async () => {
     const [result, error] = await get_car(id);
-    if (error) {
+    const [response, err] = await car_reviews(id);
+    if (error || err) {
       return;
     }
+    setReviews(response);
     setCarDetails(result);
   };
-  const removeCar = async () => {
-    const [result, error] = await unfavourite_car({
-      customerId: user?.id,
-      carId: carDetails?.id,
-    });
-    if (result) {
-      showToast("Car Unsaved");
-    }
-    showToast(error, true);
+
+  function getAverageRating() {
+    if (reviews.length === 0) return 0;
+    const total = reviews?.reduce((acc, review) => acc + review.rating, 0);
+    const average = total / reviews.length;
+    return average;
+  }
+  const handleReview = () => {
+    if (user) setDisplayReviewModal(true);
+
+    if (!user) showToast("Please Sign In To Post Review", true);
   };
   useEffect(() => {
     getCar();
@@ -165,11 +173,37 @@ export const CarDetails = () => {
           <div className="container">
             <div className="row">
               <div className="car__information">
-                <img
-                  src={carDetails.image}
-                  alt={`${carDetails.make} ${carDetails.model}`}
-                  className="car__details--image"
-                />
+                <div>
+                  <img
+                    src={carDetails.image}
+                    alt={`${carDetails.make} ${carDetails.model}`}
+                    className="car__details--image"
+                  />
+                  <div className="reviews__wrapper">
+                    <div className="review__title review__content">
+                      <h3>Reviews</h3>
+                      <span>
+                        <Rating
+                          readonly={true}
+                          initialValue={getAverageRating()}
+                          size={20}
+                        />
+                      </span>
+                      <span>{getAverageRating()} /5</span>
+                    </div>
+                    {reviews.length === 0 ? (
+                      <h4>
+                        No Reviews Yet, <br />
+                        Be the first one to add a review
+                      </h4>
+                    ) : (
+                      reviews?.map((rev, index) => (
+                        <Review review={rev} key={index} />
+                      ))
+                    )}
+                  </div>
+                </div>
+
                 <div className="car__details">
                   <div>
                     <h2>
@@ -190,9 +224,9 @@ export const CarDetails = () => {
                       incl. taxes & fees, on approved credit
                     </h6>
 
-                    <h6 className="car__total--price">
+                    <h3 className="car__total--price">
                       ${carDetails?.price.toLocaleString()}
-                    </h6>
+                    </h3>
                   </div>
 
                   <div className="car__color">
@@ -227,20 +261,25 @@ export const CarDetails = () => {
                     </div>
                   </div>
                   <div className="car__details--buttons-wrapper">
-                    <button className="btn__general continue__btn">
-                      CONTINUE
+                    <button
+                      className="btn__general continue__btn"
+                      onClick={() => handleReview()}
+                    >
+                      REVIEW
                     </button>
-                    {!carSaved(carDetails.id) ? (
+                    {displayReviewModal && <RatingModal id={carDetails.id} />}
+
+                    {!isCarSaved(carDetails.id) ? (
                       <button
                         className="btn__general save__btn"
-                        onClick={() => saveCar()}
+                        onClick={() => saveCar(carDetails.id)}
                       >
                         SAVE
                       </button>
                     ) : (
                       <button
                         className="btn__general save__btn"
-                        onClick={() => removeCar()}
+                        onClick={() => removeCar(carDetails.id)}
                       >
                         UNSAVE
                       </button>

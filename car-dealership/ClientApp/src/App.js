@@ -5,21 +5,23 @@ import { Navbar } from "./components/NavBar";
 import AppRoutes from "./AppRoutes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { AppProvider } from "./providers/AppProvider";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 function App() {
   return (
     <div className="App">
       <ToastContainer theme="colored" position="top-right"></ToastContainer>
       <BrowserRouter>
-        <Navbar />
-        <Routes>
-          {AppRoutes.map((route, index) => {
-            const { element, ...rest } = route;
-            return <Route key={index} {...rest} element={element} />;
-          })}
-        </Routes>
-        <Footer />
+        <AppProvider>
+          <Navbar />
+          <Routes>
+            {AppRoutes.map((route, index) => {
+              const { element, ...rest } = route;
+              return <Route key={index} {...rest} element={element} />;
+            })}
+          </Routes>
+          <Footer />
+        </AppProvider>
       </BrowserRouter>
     </div>
   );

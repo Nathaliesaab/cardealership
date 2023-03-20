@@ -12,6 +12,7 @@ const context = [
   "/api/customer",
   "/api/car",
   "/api/favourite",
+  "/api/review",
 ];
 //"/api/car/*"
 const onError = (err, req, resp, target) => {
