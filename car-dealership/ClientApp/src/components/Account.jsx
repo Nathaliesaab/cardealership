@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState, useMemo } from "react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AppContext } from "../providers/AppProvider";
 import { SavedCar } from "./ui/SavedCar";

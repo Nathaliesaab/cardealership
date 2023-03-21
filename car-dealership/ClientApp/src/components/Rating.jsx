@@ -14,11 +14,11 @@ export const RatingModal = ({ id }) => {
   };
   const validate = () => {
     let result = true;
-    if (review === "" || review === null) {
+    if (!review) {
       result = false;
       showToast("Please Enter Review", false, true);
     }
-    if (rating === 0) {
+    if (!rating) {
       result = false;
       showToast("Please Choose Rating", false, true);
     }

@@ -2,39 +2,20 @@ import React, { useContext, useState } from "react";
 import { CloseIcon } from "./common/icons/CloseIcon";
 import { AppContext } from "../providers/AppProvider";
 import { toast } from "react-toastify";
+import { validate } from "../data/validate";
 
 const Login = () => {
-  //state variables to manage input states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const { signIn, setDisplayLoginModal, setDisplaySignupModal, showToast } =
     useContext(AppContext);
 
-  // function to validate login  inputs
-  const validate = () => {
-    let result = true;
-    if (email === "" || email === null) {
-      result = false;
-      showToast("Please enter email", false, true);
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      result = false;
-      showToast("Please enter a valid email", false, true);
-    }
-    if (password === "" || password === null) {
-      result = false;
-      showToast("Please enter password", false, true);
-    } else if (password.length < 8) {
-      result = false;
-      showToast("Password must be at least 8 characters long", false, true);
-    }
-    return result;
-  };
-
   const ProceedLoginusingAPI = async (e) => {
     e.preventDefault();
-
-    if (!validate()) {
+    const messaege = validate(email, password, null, false);
+    if (messaege) {
+      showToast(messaege, false, true);
       return;
     }
     const credentials = { email, password };
@@ -64,6 +45,7 @@ const Login = () => {
             type="text"
             className="modal__input"
             id="email"
+            required
             placeholder="Email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
@@ -79,6 +61,7 @@ const Login = () => {
             className="modal__input password__input"
             id="password"
             value={password}
+            required
             placeholder="........"
             onChange={(event) => setPassword(event.target.value)}
           />

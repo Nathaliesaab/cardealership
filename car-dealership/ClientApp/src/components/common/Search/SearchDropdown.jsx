@@ -5,16 +5,10 @@ import { SearchDropdownItem } from "./SearchDropdownItem";
 import { AppContext } from "../../../providers/AppProvider";
 const SearchDropdown = ({ search }) => {
   const { showToast } = useContext(AppContext);
-  // state to manage searcg results
   const [cars, setCars] = useState([]);
-
-  // state to manage loading state
   const [loading, setLoading] = useState(true);
-
-  //adding debounce to set search url, not to call api on each key stroke
   const searchUrl = useDebounce(`api/car/search/${search}`, 500);
 
-  //asynchronous function to call search api
   const searchCars = async (searchUrl) => {
     const [result, error] = await search_cars(searchUrl);
     if (error) {
@@ -25,9 +19,9 @@ const SearchDropdown = ({ search }) => {
   };
 
   useEffect(() => {
-    //not calling search api unless  3 characters are entered
     search.length > 2 && searchCars(searchUrl);
   }, [searchUrl]);
+
   return (
     <div className="search__dropdown--wrapper">
       {search.length < 3 ? (

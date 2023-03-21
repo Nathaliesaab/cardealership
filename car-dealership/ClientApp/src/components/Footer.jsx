@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { socials } from "./footer_socials";
+import { socials } from "../data/footer_socials";
 export const Footer = () => {
   const location = useLocation();
   return (

@@ -1,4 +1,3 @@
-//POST REQUEST TO CREATE NEW ACCOUNT
 export const register = async (user) => {
   try {
     const response = await fetch("/api/customer/register", {
@@ -6,8 +5,9 @@ export const register = async (user) => {
       headers: { "content-type": "application/json" },
       body: JSON.stringify(user),
     });
+    console.log(response.status);
     if (response.status == 400) {
-      return ["Customer with this email already exist", null];
+      return [null, "Customer with this email already exist"];
     }
     return [response, null];
   } catch (error) {
@@ -15,19 +15,17 @@ export const register = async (user) => {
   }
 };
 
-//POST REQUEST TO SIGN IN
 export const sign_in = async (credentials) => {
   try {
-    const res = await fetch("/api/customer/authenticate", {
+    const response = await fetch("/api/customer/authenticate", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(credentials),
     });
-
-    const resp = await res.json();
-    if (res.ok) {
-      localStorage.setItem("jwt", JSON.stringify(resp.jwtToken));
-      return [resp, null];
+    const tokens = await response.json();
+    if (response.ok) {
+      localStorage.setItem("jwt", JSON.stringify(tokens.jwtToken));
+      return [tokens, null];
     } else {
       return ["Login failed, invalid credentials", null];
     }
@@ -43,11 +41,13 @@ const headers = {
   Authorization: `Bearer ${token?.replace(/"/g, "")}`,
 };
 
-// API GET REQUEST to retreive all cars saved by customer
-export const customer_saved_cars = async (id) => {
+export const customer_saved_cars = async (id, token) => {
   try {
     const response = await fetch(`/api/favourite/customerfavourite/${id}`, {
-      headers: headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token?.replace(/"/g, "")}`,
+      },
     }).then((result) => {
       return result.json();
     });
@@ -57,7 +57,6 @@ export const customer_saved_cars = async (id) => {
   }
 };
 
-// POST REQUEST to allow customer to save a car
 export const favourite_car = async (details) => {
   try {
     const response = await fetch("/api/favourite/save", {
@@ -75,7 +74,6 @@ export const favourite_car = async (details) => {
   }
 };
 
-// POST REQUEST to allow customer to unsave a car
 export const unfavourite_car = async (details) => {
   try {
     const response = await fetch("/api/favourite/remove", {

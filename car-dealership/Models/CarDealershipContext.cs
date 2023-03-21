@@ -93,14 +93,12 @@ namespace car_dealership.Models
         }
 
 
-        public async Task<Customer> Create(Customer customer)
+        public async Task<Customer> CreateCustomer(Customer customer)
         {
-            // Connect to the database
             using (var connection = GetConnection())
             {
                 await connection.OpenAsync();
 
-                // Insert the customer into the database
                 var query = "INSERT INTO customer (name, email, password) VALUES (@Name, @Email, @Password)";
                 using (var command = new MySqlCommand(query, connection))
                 {
@@ -113,7 +111,6 @@ namespace car_dealership.Models
             }
 
             return customer;
-            // return RedirectToAction("Index", "Home");
         }
 
 

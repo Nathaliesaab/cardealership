@@ -34,7 +34,12 @@ export const FindYourCar = () => {
         <div className="row">
           <div className="find__your--car--cars--wrapper">
             {cars?.map((car) => (
-              <CarCard car={car} key={car.id} saved={isCarSaved(car?.id)} />
+              <CarCard
+                car={car}
+                key={car.id}
+                saved={isCarSaved(car?.id)}
+                isLoading={isLoading}
+              />
             ))}
           </div>
         </div>

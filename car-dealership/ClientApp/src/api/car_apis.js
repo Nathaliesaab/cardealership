@@ -1,4 +1,3 @@
-// API GET REQUEST to retreive all cars
 export const getAllCars = async () => {
   try {
     const response = await fetch("/api/car").then((result) => {
@@ -10,7 +9,6 @@ export const getAllCars = async () => {
   }
 };
 
-// API GET REQUEST to retreive specific car by Id
 export const get_car = async (id) => {
   try {
     const response = await fetch(`/api/car/${id}`).then((result) => {
@@ -22,7 +20,6 @@ export const get_car = async (id) => {
   }
 };
 
-// API GET REQUEST to search cars by make,model,year,description,and safety
 export const search_cars = async (searchUrl) => {
   try {
     const response = await fetch(searchUrl)

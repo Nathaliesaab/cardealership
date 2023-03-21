@@ -1,47 +1,51 @@
 import { FavouriteIcon } from "../common/icons/FavouriteIcons";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { CarCardLoading } from "./CarCardLoading";
+import { AppContext } from "../../providers/AppProvider";
 
-export const CarCard = ({ car, saved }) => {
-  // state variable to manage loading of an image
+export const CarCard = ({ car, saved, isLoading }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
-
-  // function used to display stock quantity text
   const quantityText = () => {
     return car.stockQuantity === 1
       ? `${car.stockQuantity} car`
       : `${car.stockQuantity} cars`;
   };
-  return (
-    <Link
-      className="car__card--container"
-      to={{
-        pathname: "/car-details",
-        search: `id=${car.id}`,
-      }}
-    >
-      <h5 className="car__stock">
-        {car?.stockQuantity === 0 ? (
-          <span className="car__out--of-stock">Out of Stock</span>
-        ) : (
-          quantityText()
+  const { saveCar, removeCar } = useContext(AppContext);
+  return isLoading ? (
+    <CarCardLoading imageLoaded={imageLoaded} />
+  ) : (
+    <div className="car__card--container">
+      <Link
+        className="car__card--link"
+        to={{
+          pathname: "/car-details",
+          search: `id=${car.id}`,
+        }}
+      >
+        <h5 className="car__stock">
+          {car?.stockQuantity === 0 ? (
+            <span className="car__out--of-stock">Out of Stock</span>
+          ) : (
+            quantityText()
+          )}
+        </h5>
+        <div>
+          <h4 className="car__year">{car.year}</h4>
+          <h3 className="car__model">
+            {car?.make} {car?.model}
+          </h3>
+        </div>
+        <img
+          src={car?.image}
+          alt="Car"
+          onLoad={() => setImageLoaded(true)}
+          style={{ display: `${imageLoaded ? "flex" : "none"}` }}
+        />
+        {!imageLoaded && (
+          <div className="loading__card card__image--loading"></div>
         )}
-      </h5>
-      <div>
-        <h4 className="car__year">{car.year}</h4>
-        <h3 className="car__model">
-          {car?.make} {car?.model}
-        </h3>
-      </div>
-      <img
-        src={car?.image}
-        alt="Car"
-        onLoad={() => setImageLoaded(true)}
-        style={{ display: `${imageLoaded ? "flex" : "none"}` }}
-      />
-      {!imageLoaded && (
-        <div className="loading__card card__image--loading"></div>
-      )}
+      </Link>
       <div className={`car__price--wrapper ${saved && "car__saved"}`}>
         <h4>
           Starting at
@@ -49,8 +53,14 @@ export const CarCard = ({ car, saved }) => {
             ${car.price.toLocaleString()}
           </span>
         </h4>
-        <FavouriteIcon />
+
+        <div
+          onClick={() => (saved ? removeCar(car.id) : saveCar(car.id))}
+          style={{ cursor: "pointer" }}
+        >
+          <FavouriteIcon />
+        </div>
       </div>
-    </Link>
+    </div>
   );
 };

@@ -70,7 +70,6 @@ namespace car_dealership.Controllers
             string finaltoken = tokenhandler.WriteToken(token);
             var response = new
             {
-                // Customer = _user,
                 JWTToken = finaltoken,
                 RefreshToken = await tokenGenerator.GenerateToken(_user.id)
             };
@@ -107,19 +106,15 @@ namespace car_dealership.Controllers
         {
             try
             {
-                // Generate a random salt
                 string salt = BCrypt.Net.BCrypt.GenerateSalt();
-                // Hash the password using bcrypt with the salt
                 string hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.password, salt);
 
-                // Check if a customer with the same email already exists
                 var existingCustomer = await _context.CustomerExistsByEmail(request.email);
                 if (existingCustomer)
                 {
                     return BadRequest("Customer with the same email already exists.");
                 }
 
-                // Create a new customer object
                 var newCustomer = new Customer
                 {
                     email = request.email,
@@ -127,8 +122,7 @@ namespace car_dealership.Controllers
                     password = hashedPassword,
                 };
 
-                // Add the new customer to the database and save changes
-                await _context.Create(newCustomer);
+                await _context.CreateCustomer(newCustomer);
 
                 return Ok("Registration successful!");
             }

@@ -11,10 +11,13 @@ import { RatingModal } from "../../components/Rating";
 import { car_reviews } from "../../api/reviews_apis";
 import { Review } from "./Review";
 import { Rating } from "react-simple-star-rating";
+import { canPostReview } from "../../data/validate";
+import { CarDetailsLoading } from "./CarDetailsLoading";
 
 export const CarDetails = () => {
   const [carDetails, setCarDetails] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
   const id = urlParams.get("id");
@@ -30,117 +33,48 @@ export const CarDetails = () => {
     reviews,
   } = useContext(AppContext);
 
+  function getAverageRating() {
+    if (!reviews.length) return 0;
+    const total = reviews?.reduce((acc, review) => acc + review.rating, 0);
+    const average = total / reviews.length;
+    return average;
+  }
+
   const getCar = async () => {
     const [result, error] = await get_car(id);
     const [response, err] = await car_reviews(id);
     if (error || err) {
       return;
     }
+
+    setDataLoaded(true);
     setReviews(response);
     setCarDetails(result);
   };
 
-  function getAverageRating() {
-    if (reviews.length === 0) return 0;
-    const total = reviews?.reduce((acc, review) => acc + review.rating, 0);
-    const average = total / reviews.length;
-    return average;
-  }
   const handleReview = () => {
-    if (user) setDisplayReviewModal(true);
-
-    if (!user) showToast("Please Sign In To Post Review", true);
+    if (!user) {
+      showToast("Please sign in to post reviews", false, true);
+      return;
+    }
+    if (!canPostReview(id, user?.id)) {
+      showToast(
+        "Please Purchase this car, to be able to review it",
+        false,
+        true
+      );
+      return;
+    }
+    setDisplayReviewModal(true);
   };
   useEffect(() => {
     getCar();
   }, [id]);
+
   return (
     <section id="car__details">
-      {loading ? (
-        <>
-          <div className="car__details--header">
-            <h3>100% Online Purchase</h3>
-            <h1 className="loading__state"></h1>
-            <div className="car__details--header-links-wrapper">
-              <a
-                href="#"
-                target="_blank"
-                alt="WHY FASTKAR"
-                className="car__details--header-link"
-              >
-                WHY FASTKAR?
-              </a>
-              <div className="car__links--separator"></div>
-              <a
-                href="#"
-                target="_blank"
-                alt="Car model vidoe"
-                className="car__video--link"
-              >
-                <VideoIcon />
-                Wacth Video
-              </a>
-            </div>
-          </div>
-          <div className="container">
-            <div className="row">
-              <div className="car__information">
-                <div className="loading__car--image loading__card"></div>
-                <div style={{ maxWidth: "450px", width: "100%" }}>
-                  <div>
-                    <div className="loading__state"></div>
-                  </div>
-                  <div className="price__summary">
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "8px",
-                        alignItems: "center",
-                        marginTop: "8px",
-                      }}
-                    >
-                      <h3 className="loading__state"></h3>
-                      <div style={{ width: "100%" }}>/month *</div>
-                    </div>
-
-                    <h6 className="car__tax--rule">
-                      incl. taxes & fees, on approved credit
-                    </h6>
-
-                    <h6 className="loading__state"></h6>
-                  </div>
-                  <img
-                    src={carDetails.image}
-                    alt={`${carDetails.make} ${carDetails.model}`}
-                    className="car__details--image"
-                    onLoad={() => setLoading(false)}
-                  />
-                  <div className="car__color">
-                    <div className="color__circle loading__state"></div>
-                  </div>
-                  <div className="car__specifications">
-                    <div className="car__spec">
-                      <WheelIcon />
-                      <div className="loading__state"></div>
-                    </div>
-                    <div className="car__spec">
-                      <CarIcon />
-                      <div className="loading__state"></div>
-                    </div>
-                    <div className="car__spec">
-                      <SafetyIcon />
-                      <div className="loading__state"></div>
-                    </div>
-                    <div className="car__spec">
-                      <PassengerIcon />
-                      <div className="loading__state"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
+      {!dataLoaded ? (
+        <CarDetailsLoading />
       ) : (
         <>
           <div className="car__details--header">
@@ -178,7 +112,12 @@ export const CarDetails = () => {
                     src={carDetails.image}
                     alt={`${carDetails.make} ${carDetails.model}`}
                     className="car__details--image"
+                    style={{ display: !imageLoaded ? "none" : "flex" }}
+                    onLoad={() => setImageLoaded(true)}
                   />
+                  {!imageLoaded && (
+                    <div className="loading__car--image loading__card"></div>
+                  )}
                   <div className="reviews__wrapper">
                     <div className="review__title review__content">
                       <h3>Reviews</h3>
@@ -197,8 +136,8 @@ export const CarDetails = () => {
                         Be the first one to add a review
                       </h4>
                     ) : (
-                      reviews?.map((rev, index) => (
-                        <Review review={rev} key={index} />
+                      reviews?.map((review, index) => (
+                        <Review review={review} key={index} />
                       ))
                     )}
                   </div>

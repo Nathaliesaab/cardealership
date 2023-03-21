@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
+import { validate } from "../data/validate";
 import { AppContext } from "../providers/AppProvider";
 import { CloseIcon } from "./common/icons/CloseIcon";
-import { toast } from "react-toastify";
 
 const Registration = ({ onClose }) => {
   const [name, setName] = useState("");
@@ -14,36 +14,11 @@ const Registration = ({ onClose }) => {
     showToast,
   } = useContext(AppContext);
 
-  // function to validate registration  inputs
-  const validate = () => {
-    let result = true;
-    if (email === "" || email === null) {
-      result = false;
-      showToast("Please enter email", false, true);
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      result = false;
-      showToast("Please enter a valid email", false, true);
-    }
-    if (password === "" || password === null) {
-      result = false;
-      showToast("Please enter password", false, true);
-    } else if (password.length < 8) {
-      result = false;
-      showToast("Password must be at least 8 characters long", false, true);
-    }
-
-    if (name === "" || password === null) {
-      result = false;
-      showToast("Please enter name", false, true);
-    }
-
-    return result;
-  };
-
-  // function to handle submit registration form
-  const handleSubmit = async (e) => {
+  const handleRegisterCustomer = async (e) => {
     e.preventDefault();
-    if (!validate()) {
+    const messaege = validate(email, name, password, true);
+    if (messaege) {
+      showToast(messaege, false, true);
       return;
     }
 
@@ -52,20 +27,14 @@ const Registration = ({ onClose }) => {
       email: email,
       password: password,
     };
-    const result = await registerCustomer(user);
-    console.log(result);
-    // perform sign-up action with name, email, and password
-    // clear input fields
-    setName("");
-    setEmail("");
-    setPassword("");
+    await registerCustomer(user);
   };
 
   return (
     displaySignupModal && (
       <div className="general__modal">
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleRegisterCustomer}
           className="modal__content registration__modal"
           autoComplete="off"
         >
@@ -97,7 +66,6 @@ const Registration = ({ onClose }) => {
               className="modal__input password__input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
             />
           </div>
           <div className="input__wrapper">
