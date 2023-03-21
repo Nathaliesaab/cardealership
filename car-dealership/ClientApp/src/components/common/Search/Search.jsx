@@ -3,8 +3,13 @@ import SearchDropdown from "./SearchDropdown";
 import { CloseIcon } from "../icons/CloseIcon";
 
 export const Search = () => {
+  // state variable to manage displaying search results' dropdown initially false
   const [displayDropdown, setDisplayDropdown] = useState(false);
+
+  // state variable to manage entered search word
   const [search, setSearch] = useState("");
+
+  // inpput change handler to manage search input
   function inputChangeHandler(value) {
     setSearch(value);
     setDisplayDropdown(true);

@@ -137,6 +137,9 @@ button:active {
     width: 100%;
     animation: fade-in-out 2s infinite;
 }
+.card__image--loading {
+    min-height: 250px;
+}
 .loading__search {
     max-width: 100px;
     height: 65px;

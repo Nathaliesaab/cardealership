@@ -5,7 +5,6 @@ import { TrashIcon } from "../common/icons/TrashIcon";
 
 export const SavedCar = ({ car }) => {
   const { removeCar } = useContext(AppContext);
-
   return (
     <div className="saved__car">
       <div className="remove__car--icon" onClick={() => removeCar(car.id)}>

@@ -1,27 +1,18 @@
 import { FavouriteIcon } from "../common/icons/FavouriteIcons";
 import { Link } from "react-router-dom";
-import { useContext, useState } from "react";
-import { favourite_car } from "../../api/customer_apis.js";
-import { AppContext } from "../../providers/AppProvider";
+import { useState } from "react";
+
 export const CarCard = ({ car, saved }) => {
-  const { user, showToast } = useContext(AppContext);
+  // state variable to manage loading of an image
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  // function used to display stock quantity text
   const quantityText = () => {
     return car.stockQuantity === 1
       ? `${car.stockQuantity} car`
       : `${car.stockQuantity} cars`;
   };
-
-  const saveCar = async () => {
-    const [result, error] = await favourite_car({
-      carId: car.id,
-      customerId: user.id,
-    });
-    if (result) {
-      showToast("Car added to favourite");
-    }
-  };
-  return imageLoaded ? (
+  return (
     <Link
       className="car__card--container"
       to={{
@@ -48,6 +39,9 @@ export const CarCard = ({ car, saved }) => {
         onLoad={() => setImageLoaded(true)}
         style={{ display: `${imageLoaded ? "flex" : "none"}` }}
       />
+      {!imageLoaded && (
+        <div className="loading__card card__image--loading"></div>
+      )}
       <div className={`car__price--wrapper ${saved && "car__saved"}`}>
         <h4>
           Starting at
@@ -58,14 +52,5 @@ export const CarCard = ({ car, saved }) => {
         <FavouriteIcon />
       </div>
     </Link>
-  ) : (
-    <div className="loading__card">
-      <img
-        src={car?.image}
-        alt="Car"
-        onLoad={() => setImageLoaded(true)}
-        style={{ display: `${imageLoaded ? "flex" : "none"}` }}
-      />
-    </div>
   );
 };

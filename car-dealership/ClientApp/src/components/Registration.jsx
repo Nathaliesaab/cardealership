@@ -7,8 +7,40 @@ const Registration = ({ onClose }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { registerCustomer, displaySignupModal, setDisplaySignupModal } =
-    useContext(AppContext);
+  const {
+    registerCustomer,
+    displaySignupModal,
+    setDisplaySignupModal,
+    showToast,
+  } = useContext(AppContext);
+
+  // function to validate registration  inputs
+  const validate = () => {
+    let result = true;
+    if (email === "" || email === null) {
+      result = false;
+      showToast("Please enter email", false, true);
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      result = false;
+      showToast("Please enter a valid email", false, true);
+    }
+    if (password === "" || password === null) {
+      result = false;
+      showToast("Please enter password", false, true);
+    } else if (password.length < 8) {
+      result = false;
+      showToast("Password must be at least 8 characters long", false, true);
+    }
+
+    if (name === "" || password === null) {
+      result = false;
+      showToast("Please enter name", false, true);
+    }
+
+    return result;
+  };
+
+  // function to handle submit registration form
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) {
@@ -29,18 +61,6 @@ const Registration = ({ onClose }) => {
     setPassword("");
   };
 
-  const validate = () => {
-    let result = true;
-    if (email === "" || email === null) {
-      result = false;
-      toast.warning("Please Enter Email");
-    }
-    if (password === "" || password === null) {
-      result = false;
-      toast.warning("Please Enter Password");
-    }
-    return result;
-  };
   return (
     displaySignupModal && (
       <div className="general__modal">

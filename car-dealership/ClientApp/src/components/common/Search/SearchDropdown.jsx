@@ -1,22 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { search_cars } from "../../../api/car_apis";
 import useDebounce from "../../../reactHooks/useDebounce";
-
 import { SearchDropdownItem } from "./SearchDropdownItem";
+import { AppContext } from "../../../providers/AppProvider";
 const SearchDropdown = ({ search }) => {
-  const [items, setItems] = useState([]);
+  const { showToast } = useContext(AppContext);
+  // state to manage searcg results
+  const [cars, setCars] = useState([]);
+
+  // state to manage loading state
   const [loading, setLoading] = useState(true);
+
+  //adding debounce to set search url, not to call api on each key stroke
   const searchUrl = useDebounce(`api/car/search/${search}`, 500);
+
+  //asynchronous function to call search api
   const searchCars = async (searchUrl) => {
     const [result, error] = await search_cars(searchUrl);
     if (error) {
-      return;
+      showToast(error, true);
     }
-    setItems(result);
+    setCars(result);
     setLoading(false);
   };
 
   useEffect(() => {
+    //not calling search api unless  3 characters are entered
     search.length > 2 && searchCars(searchUrl);
   }, [searchUrl]);
   return (
@@ -31,14 +40,14 @@ const SearchDropdown = ({ search }) => {
         <ul
           className="search__dropdown--content"
           style={{
-            overflowY: `${items?.length > 4 && "scroll"}`,
+            overflowY: `${cars?.length > 4 && "scroll"}`,
           }}
         >
-          {items ? (
+          {cars ? (
             <>
-              {items.slice(0, 10).map((item) => (
-                <li key={item.id}>
-                  <SearchDropdownItem car={item} />
+              {cars.slice(0, 10).map((car) => (
+                <li key={car.id}>
+                  <SearchDropdownItem car={car} />
                 </li>
               ))}
             </>

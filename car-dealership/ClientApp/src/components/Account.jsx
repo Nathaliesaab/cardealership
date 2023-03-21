@@ -4,7 +4,6 @@ import { AppContext } from "../providers/AppProvider";
 import { SavedCar } from "./ui/SavedCar";
 export const Account = () => {
   const { user, signOut, favourites } = useContext(AppContext);
-
   return (
     <section id="account">
       <div className="container">

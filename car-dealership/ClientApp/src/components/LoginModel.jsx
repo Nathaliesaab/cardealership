@@ -1,23 +1,32 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { CloseIcon } from "./common/icons/CloseIcon";
 import { AppContext } from "../providers/AppProvider";
 import { toast } from "react-toastify";
 
 const Login = () => {
+  //state variables to manage input states
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signIn, setDisplayLoginModal, setDisplaySignupModal } =
+
+  const { signIn, setDisplayLoginModal, setDisplaySignupModal, showToast } =
     useContext(AppContext);
 
+  // function to validate login  inputs
   const validate = () => {
     let result = true;
     if (email === "" || email === null) {
       result = false;
-      toast.warning("Please Enter Email");
+      showToast("Please enter email", false, true);
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      result = false;
+      showToast("Please enter a valid email", false, true);
     }
     if (password === "" || password === null) {
       result = false;
-      toast.warning("Please Enter Password");
+      showToast("Please enter password", false, true);
+    } else if (password.length < 8) {
+      result = false;
+      showToast("Password must be at least 8 characters long", false, true);
     }
     return result;
   };
