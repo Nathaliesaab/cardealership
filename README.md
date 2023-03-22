@@ -43,7 +43,7 @@ dotnet restore
 #### Database Setup 
 
 1. Create a new database in MySQL.
-2. Install car-dealership.sql file and import into newly created database.
+2. Install CarDealership.sql file and import into newly created database.
 3. Open the appsettings.json file in project/server.
 4. Update the ConnectionStrings section with your MySQL server, database name, username, and password.
 
@@ -67,7 +67,9 @@ dotnet start
 Once the project is running, you can use it as follows:
 
 * The React front-end is accessible at https://localhost:44396/
-* The ASP.NET back-end API is accessible at https://localhost:44396/api/
+* The ASP.NET back-end API is accessible at https://localhost:44396/api/ 
+  * A postman collection is found in project with all apis present.
+  * Note that for the available endpoints for Reviews and Favourites in collection, authorization is requsted to be added inside the collection's setting
 * The MySQL database can be accessed through the configured connection string in the appsettings.json file.
 
 ## Troubleshooting
