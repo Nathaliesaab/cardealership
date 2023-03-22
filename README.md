@@ -28,20 +28,16 @@ git clone https://github.com/Nathaliesaab/cardealership.git
 #### Front Setup 
 Install Node.js dependencies.
 ```
-
 cd car-dealership/ClientApp
 npm install 
-
 ```
 
 #### Backend Setup 
 Install ASP.NET dependencies.
 
 ```
-
 cd car-dealership
 dotnet restore
-
 ```
 
 #### Database Setup 
@@ -55,20 +51,16 @@ dotnet restore
 
 1. For the frontend:
 ```
-
 cd car-dealership/car-dealership/ClientApp
 npm run build 
 npm run start 
-
 ```
 
 2. For the backend:
 ```
-
 cd car-dealership/car-dealership
 dotnet build 
 dotnet start 
-
 ```
 ## Usage
 
