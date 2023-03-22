@@ -8,10 +8,10 @@ export const CarDetailsLoading = () => {
     <>
       <div className="car__details--header">
         <h3>100% Online Purchase</h3>
-        <h1 className="loading__state"></h1>
+        <div className="loading__state"></div>
         <div className="car__details--header-links-wrapper">
           <a
-            href="#"
+            href="google.com"
             target="_blank"
             alt="WHY FASTKAR"
             className="car__details--header-link"
@@ -20,7 +20,7 @@ export const CarDetailsLoading = () => {
           </a>
           <div className="car__links--separator"></div>
           <a
-            href="#"
+            href="google.com"
             target="_blank"
             alt="Car model vidoe"
             className="car__video--link"
@@ -46,7 +46,7 @@ export const CarDetailsLoading = () => {
                     marginTop: "8px",
                   }}
                 >
-                  <h3 className="loading__state"></h3>
+                  <div className="loading__state"></div>
                   <div style={{ width: "100%" }}>/month *</div>
                 </div>
 
@@ -54,7 +54,7 @@ export const CarDetailsLoading = () => {
                   incl. taxes & fees, on approved credit
                 </h6>
 
-                <h6 className="loading__state"></h6>
+                <div className="loading__state"></div>
               </div>
               <div className="car__color">
                 <div className="color__circle loading__state"></div>

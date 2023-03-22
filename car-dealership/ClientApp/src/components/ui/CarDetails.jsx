@@ -85,7 +85,7 @@ export const CarDetails = () => {
             </h1>
             <div className="car__details--header-links-wrapper">
               <a
-                href="#"
+                href="google.com"
                 target="_blank"
                 alt="WHY FASTKAR"
                 className="car__details--header-link"
@@ -94,7 +94,7 @@ export const CarDetails = () => {
               </a>
               <div className="car__links--separator"></div>
               <a
-                href="#"
+                href="google.com"
                 target="_blank"
                 alt="Car model vidoe"
                 className="car__video--link"

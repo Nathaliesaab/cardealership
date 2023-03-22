@@ -17,6 +17,7 @@ namespace car_dealership.Models
             return new MySqlConnection(ConnectionString);
         }
 
+        // START CARS
         public List<Car> GetAllCars()
         {
             List<Car> list = new List<Car>();
@@ -92,7 +93,7 @@ namespace car_dealership.Models
             return chosenCar;
         }
 
-
+        // START CUSTOMER
         public async Task<Customer> CreateCustomer(Customer customer)
         {
             using (var connection = GetConnection())
@@ -114,7 +115,7 @@ namespace car_dealership.Models
         }
 
 
-        public async Task<Customer> AuthenticateCustomer(Customer customer)
+        public async Task<Customer> AuthenticateCustomer(SignInRequest customer)
         {
             using (MySqlConnection conn = GetConnection())
             {
@@ -148,7 +149,6 @@ namespace car_dealership.Models
                 }
             }
 
-            // If we reach this point, authentication failed
             return null;
         }
 
@@ -247,6 +247,7 @@ namespace car_dealership.Models
             }
         }
 
+        //START FAVOURITE
         public async Task<bool> FavouriteCar(int carId, int userId)
         {
             using (MySqlConnection conn = GetConnection())
@@ -308,9 +309,8 @@ namespace car_dealership.Models
         }
 
 
-        // START REVIEW APIS
-
-        public async Task<bool> PostReview(Review request)
+        // START REVIEW
+        public async Task<bool> PostReview(ReviewRequest request)
         {
             using (MySqlConnection conn = GetConnection())
             {

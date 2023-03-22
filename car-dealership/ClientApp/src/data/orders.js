@@ -7,4 +7,8 @@ export const orders = [
     carId: 3,
     cusomerId: 2,
   },
+  {
+    carId: 6,
+    cusomerId: 19,
+  },
 ];

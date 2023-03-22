@@ -6,7 +6,7 @@ import { AppContext } from "../providers/AppProvider";
 export const FindYourCar = () => {
   const [cars, setCars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { isCarSaved, savedCars, user } = useContext(AppContext);
+  const { isCarSaved, getSavedCars, user } = useContext(AppContext);
   const getCars = async () => {
     const [result, error] = await getAllCars();
     if (error) {
@@ -21,7 +21,7 @@ export const FindYourCar = () => {
   }, []);
   useEffect(() => {
     if (user) {
-      savedCars();
+      getSavedCars();
     }
   }, [user]);
   return (

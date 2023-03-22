@@ -44,7 +44,7 @@ namespace car_dealership.Controllers
         //Authentication endpoit
         [Route("api/[controller]/authenticate")]
         [HttpPost]
-        public async Task<IActionResult> Authenticate([FromBody] Customer customer)
+        public async Task<IActionResult> Authenticate([FromBody] SignInRequest customer)
         {
             TokenResponse tokenResponse = new TokenResponse();
             Customer _user = await _context.AuthenticateCustomer(customer);
@@ -76,7 +76,6 @@ namespace car_dealership.Controllers
             return Ok(response);
         }
 
-        // Generate a refresh token endpoint
         [Route("api/[controller]/refresh")]
         [HttpPost]
         public async Task<IActionResult> Refresh([FromBody] TokenResponse token)
@@ -85,9 +84,6 @@ namespace car_dealership.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = (JwtSecurityToken)tokenHandler.ReadToken(token.JWTToken);
             var userId = Int32.Parse(securityToken.Claims.FirstOrDefault(c => c.Type == "unique_name")?.Value);
-
-
-            //var username = principal.Identity.Name;
             var _reftable = _context.GetRefreshToken(userId, token.RefreshToken);
             if (_reftable == null)
             {
@@ -99,7 +95,6 @@ namespace car_dealership.Controllers
 
 
 
-        // Register endpoint
         [Route("api/[controller]/register")]
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] Customer request)

@@ -16,7 +16,7 @@ const Registration = ({ onClose }) => {
 
   const handleRegisterCustomer = async (e) => {
     e.preventDefault();
-    const messaege = validate(email, name, password, true);
+    const messaege = validate(email, password, name, true);
     if (messaege) {
       showToast(messaege, false, true);
       return;

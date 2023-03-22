@@ -5,8 +5,7 @@ export const register = async (user) => {
       headers: { "content-type": "application/json" },
       body: JSON.stringify(user),
     });
-    console.log(response.status);
-    if (response.status == 400) {
+    if (response.status === 400) {
       return [null, "Customer with this email already exist"];
     }
     return [response, null];
@@ -34,12 +33,6 @@ export const sign_in = async (credentials) => {
   }
 };
 
-//GET JWT Token from local storage to added as authorization for needed request
-const token = localStorage.getItem("jwt");
-const headers = {
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${token?.replace(/"/g, "")}`,
-};
 
 export const customer_saved_cars = async (id, token) => {
   try {
@@ -57,11 +50,14 @@ export const customer_saved_cars = async (id, token) => {
   }
 };
 
-export const favourite_car = async (details) => {
+export const favourite_car = async (details, token) => {
   try {
     const response = await fetch("/api/favourite/save", {
       method: "POST",
-      headers: headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token?.replace(/"/g, "")}`,
+      },
       body: JSON.stringify(details),
     })
       .then((result) => result.json())
@@ -74,11 +70,14 @@ export const favourite_car = async (details) => {
   }
 };
 
-export const unfavourite_car = async (details) => {
+export const unfavourite_car = async (details, token) => {
   try {
     const response = await fetch("/api/favourite/remove", {
       method: "POST",
-      headers: headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token?.replace(/"/g, "")}`,
+      },
       body: JSON.stringify(details),
     })
       .then((result) => result.json())

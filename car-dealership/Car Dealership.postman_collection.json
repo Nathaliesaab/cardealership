@@ -1,0 +1,371 @@
+{
+	"info": {
+		"_postman_id": "9baa99f1-5ea5-44ca-82fd-c0dc806ca9cf",
+		"name": "Car Dealership",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17615714"
+	},
+	"item": [
+		{
+			"name": "Cars",
+			"item": [
+				{
+					"name": "All cars",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjEiLCJuYmYiOjE2NzkxNTA3MzYsImV4cCI6MTY3OTE1MTkzNiwiaWF0IjoxNjc5MTUwNzM2fQ.FVgecxQiAUg04OyUIBrr6F4yB5RfPM6qTKzp0Jc2oSg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/car",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"car"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Car Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/car/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"car",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Cars",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/car/search/2022",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"car",
+								"search",
+								"2022"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "save",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJ1bmlxdWVfbmFtZSI6Ik5hdGhhbGllc2FhYiIsImVtYWlsIjoibmF0aGFsaWVzYWFiNkBnbWFpbC5jb20iLCJuYmYiOjE2NzkyMjg0MDUsImV4cCI6MTY3OTIzNTYwNSwiaWF0IjoxNjc5MjI4NDA1fQ.oVBQ6KcDhKg1MhJ1w5e3urGlYUV_D6LB_U9gbmjHI8g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"carId\": 9,\n    \"customerId\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44396/api/favourite/save",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44396",
+							"path": [
+								"api",
+								"favourite",
+								"save"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Create Customer",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\" : \"nathaliesaab6@gmail.com\",\n  \"name\": \"Nathalie Saab\",\n  \"password\" : \"123456789\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/customer/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"customer",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\" : \"nathaliesaab6@gmail.com\",\n  \"password\" : \"76nath77\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/customer/authenticate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"customer",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"jwtToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjEiLCJlbWFpbCI6Im5hdGhhbGllc2FhYjZAZ21haWwuY29tIiwibmJmIjoxNjc5MTU2ODYwLCJleHAiOjE2NzkxNTgwNjAsImlhdCI6MTY3OTE1Njg2MH0.uQEYU9bswLSPW1XM-e4A7AwjLqmQ8stdeTXIJb8Hl8c\",\n    \"refreshToken\": \"qDXxifkfaeogwb9TKudIcaqkdiYxnzDLx7hbrTEHSMc=\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/customer/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"customer",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reviews",
+			"item": [
+				{
+					"name": "Car Reviews",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/review/carreviews/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"review",
+								"carreviews",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Post Review",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customerId\" : 2,\n    \"carId\" : 1,\n    \"rating\": 5,\n    \"review\" : \"Posting a review from postman\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/review/postreview",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"review",
+								"postreview"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Favourites",
+			"item": [
+				{
+					"name": "Customer Saved Cars",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/favourite/customerfavourite/2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"favourite",
+								"customerfavourite",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Car",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"carId\" : 2,\n    \"customerId\": 19\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/favourite/save",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"favourite",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unsave Car",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"carId\" : 3,\n    \"customerId\": 19\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/favourite/remove",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"favourite",
+								"remove"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJ1bmlxdWVfbmFtZSI6Ik5hdGhhbGllIFNhYWIiLCJlbWFpbCI6Im5hdGhhbGllc2FhYjZAZ21haWwuY29tIiwibmJmIjoxNjc5NTA1NzM4LCJleHAiOjE2Nzk1MTI5MzgsImlhdCI6MTY3OTUwNTczOH0.MHB0wRt_1MnU4nPS6-l-w6G0FQ7yUI3cgBMsEPJH3uw",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://localhost:44396/api",
+			"type": "string"
+		}
+	]
+}

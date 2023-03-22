@@ -448,7 +448,7 @@ Account
   gap: 32px;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: start;
+  justify-content: flex-start;
 }
 .saved__car {
   max-width: 150px;

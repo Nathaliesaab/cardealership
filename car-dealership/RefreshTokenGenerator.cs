@@ -28,7 +28,6 @@ namespace car_dealership
 
                 if (_user != null)
                 {
-                    // Console.WriteLine(_user.refreshToken);
                     await context.updateRefreshToken(userId, RefreshToken);
                 }
                 else

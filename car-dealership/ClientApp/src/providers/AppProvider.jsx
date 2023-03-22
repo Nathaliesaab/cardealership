@@ -85,7 +85,7 @@ export const AppProvider = ({ children }) => {
     handleSignIn({ email: user.email, password: user.password });
   };
 
-  const handleGetSavedCars = async () => {
+  const getSavedCars = async () => {
     if (!user) {
       setFavourites([]);
       return;
@@ -102,32 +102,37 @@ export const AppProvider = ({ children }) => {
       showToast("Please sign in to save cars", false, true);
       return;
     }
-    const [result, error] = await favourite_car({
-      carId,
-      customerId: +user?.id,
-    });
+    const [result, error] = await favourite_car(
+      {
+        carId,
+        customerId: +user?.id,
+      },
+      token
+    );
     if (error) {
       showToast(error, true);
       return;
     }
 
     showToast("Car Saved");
-    handleGetSavedCars();
+    getSavedCars();
   };
 
-  // function to handle unsaving cars
   const removeCar = async (carId) => {
-    const [result, error] = await unfavourite_car({
-      customerId: +user?.id,
-      carId,
-    });
+    const [result, error] = await unfavourite_car(
+      {
+        customerId: +user?.id,
+        carId,
+      },
+      token
+    );
     if (error) {
       showToast(error, true);
       return;
     }
 
     showToast("Car Unsaved");
-    handleGetSavedCars();
+    getSavedCars();
   };
 
   useEffect(() => {
@@ -158,7 +163,7 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      handleGetSavedCars();
+      getSavedCars();
     }
   }, [user]);
 
@@ -166,7 +171,7 @@ export const AppProvider = ({ children }) => {
     user,
     signIn: handleSignIn,
     signOut: handleSignOut,
-    savedCars: handleGetSavedCars,
+    getSavedCars,
     setDisplayLoginModal,
     showToast,
     displayLoginModal,

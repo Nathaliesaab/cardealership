@@ -20,7 +20,7 @@ namespace car_dealership.Controllers
         [Authorize]
         [Route("api/[controller]/postreview")]
         [HttpPost]
-        public async Task<bool> post_review(Review request)
+        public async Task<bool> post_review(ReviewRequest request)
         {
             var result = await _context.PostReview(request);
             return result;

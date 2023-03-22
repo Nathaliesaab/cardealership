@@ -1,15 +1,11 @@
-//GET JWT Token from local storage to added as authorization for needed request
-const token = localStorage.getItem("jwt");
-const headers = {
-  "Content-Type": "application/json",
-  Authorization: `Bearer ${token?.replace(/"/g, "")}`,
-};
-
-export const post_review = async (review) => {
+export const post_review = async (review,token) => {
   try {
     const response = await fetch("/api/review/postreview", {
       method: "POST",
-      headers: headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token?.replace(/"/g, "")}`,
+      },
       body: JSON.stringify(review),
     })
       .then((result) => result.json())

@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { CloseIcon } from "./common/icons/CloseIcon";
 import { AppContext } from "../providers/AppProvider";
-import { toast } from "react-toastify";
 import { validate } from "../data/validate";
 
 const Login = () => {
@@ -75,10 +74,8 @@ const Login = () => {
         </button>
         <div
           onClick={() => {
-            {
-              setDisplayLoginModal(false);
-              setDisplaySignupModal(true);
-            }
+            setDisplayLoginModal(false);
+            setDisplaySignupModal(true);
           }}
         >
           Sign Up here

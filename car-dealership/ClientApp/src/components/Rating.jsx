@@ -37,7 +37,10 @@ export const RatingModal = ({ id }) => {
       review: review,
       rating: rating,
     };
-    const [response, error] = await post_review(reviewBody);
+    const [response, error] = await post_review(
+      reviewBody,
+      localStorage.getItem("jwt")
+    );
     if (response) {
       setDisplayReviewModal(false);
       showToast("Review Added Successfully");
