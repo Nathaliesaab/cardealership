@@ -67,7 +67,7 @@ dotnet start
 Once the project is running, you can use it as follows:
 
 * The React front-end is accessible at https://localhost:44396/
-* The ASP.NET back-end API is accessible at https://localhost:5291/api.
+* The ASP.NET back-end API is accessible at https://localhost:44396/api/
 * The MySQL database can be accessed through the configured connection string in the appsettings.json file.
 
 ## Troubleshooting
